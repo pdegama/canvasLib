@@ -36,6 +36,10 @@ class FillText extends CanvasElement {
         this.textInfo.textFont = font
     }
 
+    public onclick(cb: Function) {
+        this.textInfo.onclick = cb
+    }
+
     public getInfo(): CanvasElementInfo {
         return this.textInfo
     }

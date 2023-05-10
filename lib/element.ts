@@ -13,6 +13,8 @@ interface CanvasElementInfo {
     height?: number;
     width?: number;
     pos?: Position;
+
+    onclick?: Function
 }
 
 abstract class CanvasElement {

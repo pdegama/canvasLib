@@ -3,5 +3,4 @@ type Position = {
     y: number
 }
 
-
 export type { Position }

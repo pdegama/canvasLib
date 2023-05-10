@@ -8,14 +8,21 @@ class Canvas {
     private elements: [CanvasElement]
 
     constructor(canvas: any) {
+        this.elements = [new NoneElement()]
+
         this.canvas = canvas
         this.context = this.canvas.getContext("2d")
-        this.elements = [new NoneElement()]
     }
 
     public setCanvas(canvas: any) {
         this.canvas = canvas
         this.context = this.canvas.getContext("2d")
+    }
+
+    public clickable(clickable: boolean) {
+        if (clickable) {
+            this.canvas.addEventListener("click", this.canvasClickEvent)
+        }
     }
 
     public setSize(height: number, width: number) {
@@ -47,7 +54,7 @@ class Canvas {
                     if (this.context?.fillStyle) {
                         this.context.fillStyle = "#0000ffcc"
                     }
-                    
+
                     let textWidth = this.context?.measureText(elementInfo.text || "Text Field").width
                     this.context?.fillRect(elementInfo.pos?.x || 0, elementInfo.pos?.y || 0, textWidth || 0, elementInfo.textSize || 0)
 
@@ -56,7 +63,7 @@ class Canvas {
                     }
 
                     this.context?.fillText(elementInfo.text || "Text Field", elementInfo.pos?.x || 0, elementInfo.pos?.y || 0, 500)
-                    
+
                     break;
 
                 case 'image':
@@ -64,6 +71,10 @@ class Canvas {
                     break;
             }
         })
+    }
+
+    private canvasClickEvent(e: any) {
+        console.log(e);
     }
 
 }
