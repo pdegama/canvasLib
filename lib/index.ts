@@ -1,10 +1,2 @@
-const helloAlert = (): void => {
-    alert("Hello!")
-}
-
-const hiAlert = (name: string): void => {
-    alert(`Hi, ${name}!`)
-}
-
-export { helloAlert, hiAlert }
-
+export { default as Canvas } from './canvas';
+export { default as FillText } from './text';
