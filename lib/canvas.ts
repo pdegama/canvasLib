@@ -74,7 +74,13 @@ class Canvas {
     }
 
     private canvasClickEvent(e: any) {
-        console.log(e);
+
+        let x = e.clientX - e.target.getBoundingClientRect().x
+        let y = e.clientY - e.target.getBoundingClientRect().y
+
+        console.log(x, y);
+        
+
     }
 
 }
