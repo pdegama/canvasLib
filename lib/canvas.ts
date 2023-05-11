@@ -1,6 +1,7 @@
 import { CanvasElement } from "./element"
 import { NoneElement } from "./noneelement"
-import { SelectProp } from "./select"
+import { Position } from "./position"
+import { SelectProp, SelectEleWithPos } from "./select"
 
 class Canvas {
 
@@ -10,14 +11,21 @@ class Canvas {
     private selectProp: SelectProp
 
     private eleSlect: boolean = false
+    private mouseDownPos: Position
+    private mouseMoveEle: [SelectEleWithPos]
 
     constructor(canvas: any) {
 
         this.canvas = canvas
         this.context = this.canvas.getContext("2d")
         this.selectProp = {
-            multiLock: false
+            multiLock: false,
+            mouseLock: false,
+            resize: false,
         }
+
+        this.mouseDownPos = { x: 0, y: 0 }
+        this.mouseMoveEle = [{ element: new NoneElement(), pos: { x: 0, y: 0 } }]
 
         var c = this
         window.addEventListener("keyup", (e) => {
@@ -40,15 +48,24 @@ class Canvas {
 
             var c = this
 
-            this.canvas.addEventListener("click", (e) => {
-                this.canvasClickEvent(e, c)
-            }, false)
+            this.canvas.addEventListener("mousedown", (e: any) => {
+                this.canvasClickEvent(e, c) // first select
+                this.mouseMoveDownEvent(e, c)
+            })
 
-            window.addEventListener("keydown", (e) => {
+            this.canvas.addEventListener("mousemove", (e: any) => {
+                this.mouseMoveEvent(e, c)
+            })
+
+            window.addEventListener("mouseup", () => {
+                this.mouseMoveUpEvent(c)
+            })
+
+            window.addEventListener("keydown", (e: any) => {
                 if (this.selectProp.multiSelect && e.key == "Control") this.selectProp.multiLock = true
             })
 
-            window.addEventListener("keyup", (e) => {
+            window.addEventListener("keyup", (e: any) => {
                 if (e.key == "Control") this.selectProp.multiLock = false
             })
 
@@ -179,6 +196,52 @@ class Canvas {
             }
         })
 
+    }
+
+    private mouseMoveDownEvent(e: any, c: Canvas) {
+
+        c.selectProp.mouseLock = true
+
+        let x = e.clientX - e.target.getBoundingClientRect().x
+        let y = e.clientY - e.target.getBoundingClientRect().y
+        c.mouseDownPos = { x, y }
+
+        c.mouseMoveEle = [{ element: new NoneElement(), pos: { x: 0, y: 0 } }]
+        c.elements.map((element) => {
+            if (element.prop.selected) {
+                c.mouseMoveEle.push({ element, pos: element.getPos() })
+                console.log("add");
+                console.log(c.mouseMoveEle);
+            }
+        })
+
+    }
+
+    private mouseMoveEvent(e: any, c: Canvas) {
+
+        if (!c.selectProp.mouseLock) return
+
+        let x = e.clientX - e.target.getBoundingClientRect().x
+        let y = e.clientY - e.target.getBoundingClientRect().y
+
+        let dispPos = { x: x - c.mouseDownPos.x, y: y - c.mouseDownPos.y }
+
+        c.mouseMoveEle.map(({ element, pos }) => {
+            if (element.prop.type !== 'none') {
+
+                element.setPos({ x: pos.x + dispPos.x, y: pos.y + dispPos.y })
+                // console.log({ x: dispPos.x, y: dispPos.y });
+
+                this.render()
+
+            }
+        })
+
+    }
+
+    private mouseMoveUpEvent(c: Canvas) {
+        c.selectProp.mouseLock = false
+        c.mouseMoveEle = [{ element: new NoneElement(), pos: { x: 0, y: 0 } }]
     }
 
 }
