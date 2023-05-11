@@ -45,7 +45,7 @@ class Canvas {
             }, false)
 
             window.addEventListener("keydown", (e) => {
-                if (e.key == "Control") this.selectProp.multiLock = true
+                if (this.selectProp.multiSelect && e.key == "Control") this.selectProp.multiLock = true
             })
 
             window.addEventListener("keyup", (e) => {
@@ -178,7 +178,7 @@ class Canvas {
                 this.render()
             }
         })
-        
+
     }
 
 }
