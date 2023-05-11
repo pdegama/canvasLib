@@ -1,49 +1,69 @@
-import { CanvasElement, CanvasElementInfo } from "./element"
+import { CanvasElement } from "./element"
 import { Position } from "./position"
+
+interface FillTextInfo {
+    type: 'text';
+    text: string;
+    textIsEnv: boolean;
+    textFont: string;
+    textSize: number;
+    textWidth: number;
+    pos: Position
+    onclick?: Function;
+
+    height: number;
+    width: number;
+
+    selected?: boolean;
+}
 
 class FillText extends CanvasElement {
 
-    private textInfo: CanvasElementInfo
+    prop: FillTextInfo
 
     constructor() {
         super()
-        this.textInfo = {
-            elementType: 'text',
+        this.prop = {
+            type: 'text',
             text: "Text",
-            pos: { x: 10, y: 10 },
+            textIsEnv: false,
+            textFont: "Verdana",
             textSize: 22,
-            textFont: "Verdana"
+            textWidth: -1,
+            pos: { x: 10, y: 10 },
+
+            height: 22,
+            width: -1
         }
     }
 
     public setText(text: string) {
-        this.textInfo.text = text
+        this.prop.text = text
     }
 
-    public setPos(pos: Position) {
-        this.textInfo.pos = pos
+    public setWidth(w: number) {
+        this.prop.textWidth = w
     }
 
-    public getPos(): Position {
-        return this.textInfo.pos || { x: 10, y: 10 }
+    public getWidth(): number {
+        return this.prop.textWidth
     }
 
     public setFontSize(size: number) {
-        this.textInfo.textSize = size
+        this.prop.textSize = size
+        this.setHeight(this.prop.textSize)
     }
 
     public setFont(font: string) {
-        this.textInfo.textFont = font
+        this.prop.textFont = font
     }
 
     public onclick(cb: Function) {
-        this.textInfo.onclick = cb
-    }
-
-    public getInfo(): CanvasElementInfo {
-        return this.textInfo
+        this.prop.onclick = cb
     }
 
 }
 
-export default FillText
+
+export { FillText }
+export type { FillTextInfo }

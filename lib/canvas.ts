@@ -1,15 +1,15 @@
 import { CanvasElement } from "./element"
-import NoneElement from "./noneelement"
+import { NoneElement } from "./noneelement"
 
 class Canvas {
 
     private canvas: HTMLCanvasElement
     private context: CanvasRenderingContext2D | null
-    private elements: [CanvasElement]
+    private elements: [CanvasElement] = [new NoneElement()]
+
+    private eleSlect: boolean = false
 
     constructor(canvas: any) {
-        this.elements = [new NoneElement()]
-
         this.canvas = canvas
         this.context = this.canvas.getContext("2d")
     }
@@ -19,9 +19,16 @@ class Canvas {
         this.context = this.canvas.getContext("2d")
     }
 
+    public selectable(selectable: boolean) {
+        this.eleSlect = selectable
+    }
+
     public clickable(clickable: boolean) {
         if (clickable) {
-            this.canvas.addEventListener("click", this.canvasClickEvent)
+            var elements = this.elements
+            this.canvas.addEventListener("click", (e) => {
+                this.canvasClickEvent(e, elements)
+            }, false)
         }
     }
 
@@ -38,9 +45,16 @@ class Canvas {
     public render() {
         this.context?.clearRect(0, 0, this.canvas.width, this.canvas.height)
 
-        this.elements.map((element) => {
-            let elementInfo = element.getInfo()
-            switch (elementInfo.elementType) {
+        let ratio = Math.min(
+            this.canvas.clientWidth / this.canvas.width,
+            this.canvas.clientHeight / this.canvas.height
+        );
+        this.context?.scale(ratio, ratio)
+
+        this.elements.map((element, elementIndex) => {
+
+            let elementProp = element.getProp()
+            switch (elementProp.type) {
                 case 'text':
 
                     if (this.context?.textBaseline) {
@@ -48,39 +62,66 @@ class Canvas {
                     }
 
                     if (this.context?.font) {
-                        this.context.font = `${elementInfo.textSize}px ${elementInfo.textFont}`
+                        this.context.font = `${elementProp.textSize}px ${elementProp.textFont}`
                     }
 
-                    if (this.context?.fillStyle) {
-                        this.context.fillStyle = "#0000ffcc"
-                    }
+                    let textWidth = this.context?.measureText(elementProp.text || "Text Field").width
+                    this.elements[elementIndex].setWidth(textWidth || -1)
 
-                    let textWidth = this.context?.measureText(elementInfo.text || "Text Field").width
-                    this.context?.fillRect(elementInfo.pos?.x || 0, elementInfo.pos?.y || 0, textWidth || 0, elementInfo.textSize || 0)
+                    if (elementProp.selected) {
+                        if (this.context?.fillStyle) {
+                            this.context.fillStyle = "#4d90e855"
+                        }
+                        this.context?.fillRect(elementProp.pos.x, elementProp.pos.y, this.elements[elementIndex].getWidth(), elementProp.textSize)
+                    }
 
                     if (this.context?.fillStyle) {
                         this.context.fillStyle = "black"
                     }
 
-                    this.context?.fillText(elementInfo.text || "Text Field", elementInfo.pos?.x || 0, elementInfo.pos?.y || 0, 500)
+                    this.context?.fillText(elementProp.text || "Text Field", elementProp.pos.x, elementProp.pos.y, textWidth)
 
                     break;
 
-                case 'image':
+                case 'none':
 
                     break;
             }
         })
     }
 
-    private canvasClickEvent(e: any) {
+    private canvasClickEvent(e: any, elements: [CanvasElement]) {
 
         let x = e.clientX - e.target.getBoundingClientRect().x
         let y = e.clientY - e.target.getBoundingClientRect().y
 
-        console.log(x, y);
-        
+        let selectEle: CanvasElement = new NoneElement()
 
+        elements.map((element) => {
+
+            element.deselect()
+
+            let start = element.getPos();
+            let end = { x: start.x + element.getWidth(), y: start.y + element.getHeight() }
+
+            if ((x >= start.x && x <= end.x) && (y >= start.y && y <= end.y)) {
+                selectEle = element
+            }
+
+        })
+
+
+        if (selectEle.prop.type != 'none') {
+
+            if (this.eleSlect) {
+                selectEle.select()
+            }
+
+            if (selectEle.prop.onclick) selectEle.prop.onclick(selectEle)
+
+        }
+
+        this.render()
     }
 
 }

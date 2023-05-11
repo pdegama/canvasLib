@@ -1,25 +1,47 @@
 import { Position } from "./position";
-
-interface CanvasElementInfo {
-    elementType: 'text' | 'image' | 'none';
-
-    text?: string;
-    textIsEnv?: boolean;
-    textFont?: string;
-    textSize?: number;
-
-    imagePath?: string;
-
-    height?: number;
-    width?: number;
-    pos?: Position;
-
-    onclick?: Function
-}
+import { FillTextInfo } from "./text";
+import { NoneElementInfo } from "./noneelement";
 
 abstract class CanvasElement {
-    abstract getInfo(): CanvasElementInfo;
+
+    abstract prop: FillTextInfo | NoneElementInfo
+
+    public setWidth(w: number) {
+        this.prop.width = w
+    }
+
+    public setHeight(h: number) {
+        this.prop.height = h
+    }
+
+    public getWidth() {
+        return this.prop.width
+    }
+
+    public getHeight() {
+        return this.prop.height
+    }
+
+    public setPos(pos: Position) {
+        this.prop.pos = pos
+    }
+
+    public getPos(): Position {
+        return this.prop.pos || { x: 10, y: 10 }
+    }
+
+    public select() {
+        this.prop.selected = true
+    }
+
+    public deselect() {
+        this.prop.selected = false
+    }
+
+    public getProp(): FillTextInfo | NoneElementInfo {
+        return this.prop
+    }
+    
 }
 
 export { CanvasElement }
-export type { CanvasElementInfo }
