@@ -1,17 +1,28 @@
 import { CanvasElement } from "./element"
 import { NoneElement } from "./noneelement"
+import { SelectProp } from "./select"
 
 class Canvas {
 
     private canvas: HTMLCanvasElement
     private context: CanvasRenderingContext2D | null
     private elements: [CanvasElement] = [new NoneElement()]
+    private selectProp: SelectProp
 
     private eleSlect: boolean = false
 
     constructor(canvas: any) {
+
         this.canvas = canvas
         this.context = this.canvas.getContext("2d")
+        this.selectProp = {
+            multiLock: false
+        }
+
+        var c = this
+        window.addEventListener("keyup", (e) => {
+            this.arrowKeyEvent(e, c)
+        })
     }
 
     public setCanvas(canvas: any) {
@@ -19,16 +30,28 @@ class Canvas {
         this.context = this.canvas.getContext("2d")
     }
 
-    public selectable(selectable: boolean) {
+    public selectable(selectable: boolean, selectProp: SelectProp) {
         this.eleSlect = selectable
+        this.selectProp = selectProp
     }
 
     public clickable(clickable: boolean) {
         if (clickable) {
-            var elements = this.elements
+
+            var c = this
+
             this.canvas.addEventListener("click", (e) => {
-                this.canvasClickEvent(e, elements)
+                this.canvasClickEvent(e, c)
             }, false)
+
+            window.addEventListener("keydown", (e) => {
+                if (e.key == "Control") this.selectProp.multiLock = true
+            })
+
+            window.addEventListener("keyup", (e) => {
+                if (e.key == "Control") this.selectProp.multiLock = false
+            })
+
         }
     }
 
@@ -90,16 +113,17 @@ class Canvas {
         })
     }
 
-    private canvasClickEvent(e: any, elements: [CanvasElement]) {
+    private canvasClickEvent(e: any, c: Canvas) {
 
         let x = e.clientX - e.target.getBoundingClientRect().x
         let y = e.clientY - e.target.getBoundingClientRect().y
 
         let selectEle: CanvasElement = new NoneElement()
 
-        elements.map((element) => {
+        c.elements.map((element) => {
 
-            element.deselect()
+            if (!c.selectProp.multiLock) element.deselect()
+
 
             let start = element.getPos();
             let end = { x: start.x + element.getWidth(), y: start.y + element.getHeight() }
@@ -114,7 +138,11 @@ class Canvas {
         if (selectEle.prop.type != 'none') {
 
             if (this.eleSlect) {
-                selectEle.select()
+                if (!selectEle.prop.selected) {
+                    selectEle.select()
+                } else {
+                    selectEle.deselect()
+                }
             }
 
             if (selectEle.prop.onclick) selectEle.prop.onclick(selectEle)
@@ -122,6 +150,35 @@ class Canvas {
         }
 
         this.render()
+    }
+
+    private arrowKeyEvent(e: any, c: Canvas) {
+
+        if (c.selectProp.moveByArrow == undefined || !c.selectProp.moveByArrow) {
+            return
+        }
+
+        c.elements.map((element) => {
+            if (element.prop.selected) {
+                let pos = element.getPos()
+                switch (e.key) {
+                    case "ArrowDown":
+                        element.setPos({ x: pos.x, y: pos.y + 5 })
+                        break
+                    case "ArrowUp":
+                        element.setPos({ x: pos.x, y: pos.y - 5 })
+                        break
+                    case "ArrowLeft":
+                        element.setPos({ x: pos.x - 5, y: pos.y })
+                        break
+                    case "ArrowRight":
+                        element.setPos({ x: pos.x + 5, y: pos.y })
+                        break
+                }
+                this.render()
+            }
+        })
+        
     }
 
 }
