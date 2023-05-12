@@ -1,3 +1,8 @@
+// Copyright (c) 2023 Parth Degama
+// This code is licensed under MIT license
+
+// canvas element
+
 import { Position } from "./position";
 import { FillTextInfo } from "./text";
 import { NoneElementInfo } from "./noneelement";
@@ -41,7 +46,7 @@ abstract class CanvasElement {
     public getProp(): FillTextInfo | NoneElementInfo {
         return this.prop
     }
-    
+
 }
 
 export { CanvasElement }

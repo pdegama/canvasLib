@@ -1,7 +1,12 @@
+// Copyright (c) 2023 Parth Degama
+// This code is licensed under MIT license
+
+// none element
 
 import { CanvasElement } from "./element";
 import { Position } from "./position";
 
+// none element interface
 interface NoneElementInfo {
     type: 'none';
 

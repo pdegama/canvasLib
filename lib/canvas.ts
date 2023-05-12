@@ -1,3 +1,8 @@
+// Copyright (c) 2023 Parth Degama
+// This code is licensed under MIT license
+
+// canvas
+
 import { CanvasElement } from "./element"
 import { NoneElement } from "./noneelement"
 import { Position } from "./position"
@@ -5,15 +10,15 @@ import { SelectProp, SelectEleWithPos } from "./select"
 
 class Canvas {
 
-    private canvas: HTMLCanvasElement
-    private context: CanvasRenderingContext2D | null
-    private elements: [CanvasElement] = [new NoneElement()]
-    private selectProp: SelectProp
+    private canvas: HTMLCanvasElement // canvas
+    private context: CanvasRenderingContext2D | null // canvas 2d context
+    private elements: [CanvasElement] = [new NoneElement()] // all canvas elements
+    private selectProp: SelectProp // canvas elements selection prop
 
-    private eleSlect: boolean = false
-    private mouseDownPos: Position
+    private eleSlect: boolean = false // canvas elements is selectable
+    private mouseDownPos: Position // if mouse down in canvas then set mouse position in canvas
     private mouseMoveEle: [SelectEleWithPos]
-    private notDeselectLock: boolean
+    private notDeselectLock: boolean // not deselect element
 
     constructor(canvas: any) {
 
@@ -26,7 +31,7 @@ class Canvas {
         }
 
         this.mouseDownPos = { x: 0, y: 0 }
-        this.mouseMoveEle = [{ element: new NoneElement(), pos: { x: 0, y: 0 } }]
+        this.mouseMoveEle = [{ element: new NoneElement(), pos: { x: 0, y: 0 } }] // init, stor none element
 
         this.notDeselectLock = false
 
@@ -34,6 +39,7 @@ class Canvas {
         window.addEventListener("keyup", (e) => {
             this.arrowKeyEvent(e, c)
         })
+
     }
 
     public setCanvas(canvas: any) {
@@ -52,30 +58,37 @@ class Canvas {
             var c = this
 
             this.canvas.addEventListener("mousedown", (e: any) => {
+                // mouse down in canvas
 
                 if (c.mouseMoveEle.length > 2) {
+                    /* 
+                        select element is more then two
+                        (noneElements + other element...)
+                        then deselect lock set true
+                    */
                     this.notDeselectLock = true
                 }
 
                 c.mouseMoveEle = [{ element: new NoneElement(), pos: { x: 0, y: 0 } }]
-                this.canvasClickEvent(e, c) // first select
-                this.mouseMoveDownEvent(e, c)
+
+                this.elementSelectEvent(e, c)  // first select canvas element
+                this.mouseMoveDownEvent(e, c)  // and mouse move event
             })
 
             this.canvas.addEventListener("mousemove", (e: any) => {
-                this.mouseMoveEvent(e, c)
+                this.mouseMoveEvent(e, c) // mouse move event
             })
 
             window.addEventListener("mouseup", () => {
-                this.mouseMoveUpEvent(c)
+                this.mouseMoveUpEvent(c)// mouse up event
             })
 
             window.addEventListener("keydown", (e: any) => {
-                if (this.selectProp.multiSelect && e.key == "Control") this.selectProp.multiLock = true
+                if (this.selectProp.multiSelect && e.key == "Control") this.selectProp.multiLock = true // press control to lock multiselect element lock true 
             })
 
             window.addEventListener("keyup", (e: any) => {
-                if (e.key == "Control") this.selectProp.multiLock = false
+                if (e.key == "Control") this.selectProp.multiLock = false // unset multi element select lock
             })
 
         }
@@ -93,12 +106,6 @@ class Canvas {
 
     public render() {
         this.context?.clearRect(0, 0, this.canvas.width, this.canvas.height)
-
-        let ratio = Math.min(
-            this.canvas.clientWidth / this.canvas.width,
-            this.canvas.clientHeight / this.canvas.height
-        );
-        this.context?.scale(ratio, ratio)
 
         this.elements.map((element, elementIndex) => {
 
@@ -139,17 +146,18 @@ class Canvas {
         })
     }
 
-    private canvasClickEvent(e: any, c: Canvas) {
+    private elementSelectEvent(e: any, c: Canvas) {
 
+        // find mouse position in canvas
         let x = e.clientX - e.target.getBoundingClientRect().x
         let y = e.clientY - e.target.getBoundingClientRect().y
 
-        let selectEle: CanvasElement = new NoneElement()
+        let selectEle: CanvasElement = new NoneElement() // selected element
 
-        c.elements.map((element) => {
+        c.elements.map((element) => { // loop of element
 
-            if (!c.selectProp.multiLock) {
-                if (!c.notDeselectLock) {
+            if (!c.selectProp.multiLock) { // if multi select lock is not set
+                if (!c.notDeselectLock) { // if not deselect lock is not set
                     element.deselect()
                 }
             }
@@ -158,6 +166,7 @@ class Canvas {
             let end = { x: start.x + element.getWidth(), y: start.y + element.getHeight() }
 
             if ((x >= start.x && x <= end.x) && (y >= start.y && y <= end.y)) {
+                // if select element is find 
                 selectEle = element
             }
 
@@ -166,19 +175,27 @@ class Canvas {
         if (selectEle.prop.type != 'none') {
 
             if (c.eleSlect) {
+
                 if (!selectEle.prop.selected) {
-                    if (!c.selectProp.multiLock) {
-                        if (c.notDeselectLock) {
+
+                    // if element is not selected
+                    if (!c.selectProp.multiLock) {  // if multi select lock is not set
+                        if (c.notDeselectLock) {  // if not deselect lock is set
                             c.notDeselectLock = false
                             c.elements.map((element) => element.deselect())
                         }
                     }
+
                     selectEle.select()
+
                 } else {
+                    // if element is already selected
                     if (c.selectProp.multiLock) {
+                        // but select lock is set then deselect selected element
                         selectEle.deselect()
                     }
                 }
+
             }
 
             if (selectEle.prop.onclick) selectEle.prop.onclick(selectEle)
@@ -194,12 +211,12 @@ class Canvas {
     private arrowKeyEvent(e: any, c: Canvas) {
 
         if (c.selectProp.moveByArrow == undefined || !c.selectProp.moveByArrow) {
-            return
+            return // if element is not move by arrow key then return this function
         }
 
         c.elements.map((element) => {
             if (element.prop.selected) {
-                let pos = element.getPos()
+                let pos = element.getPos() // get selected element position
                 switch (e.key) {
                     case "ArrowDown":
                         element.setPos({ x: pos.x, y: pos.y + 5 })
@@ -222,15 +239,19 @@ class Canvas {
 
     private mouseMoveDownEvent(e: any, c: Canvas) {
 
-        c.selectProp.mouseLock = true
+        c.selectProp.mouseLock = true // set mouse lock
 
+        // get mouse position in canvas
         let x = e.clientX - e.target.getBoundingClientRect().x
         let y = e.clientY - e.target.getBoundingClientRect().y
-        c.mouseDownPos = { x, y }
+        c.mouseDownPos = { x, y } // set mouse down positon
 
-        c.mouseMoveEle = [{ element: new NoneElement(), pos: { x: 0, y: 0 } }]
+        c.mouseMoveEle = [{ element: new NoneElement(), pos: { x: 0, y: 0 } }] // clear mouse selected elements
+
         c.elements.map((element) => {
+            // loop of canvas elements
             if (element.prop.selected) {
+                // if element is selected then add to mouseMoveEle
                 c.mouseMoveEle.push({ element, pos: element.getPos() })
                 console.log("add");
                 console.log(c.mouseMoveEle);
@@ -241,28 +262,27 @@ class Canvas {
 
     private mouseMoveEvent(e: any, c: Canvas) {
 
-        if (!c.selectProp.mouseLock) return
+        if (!c.selectProp.mouseLock) return // if mouse is not lock then return function
 
+        // get mouse position in canvas
         let x = e.clientX - e.target.getBoundingClientRect().x
         let y = e.clientY - e.target.getBoundingClientRect().y
 
-        let dispPos = { x: x - c.mouseDownPos.x, y: y - c.mouseDownPos.y }
+        let disp = { x: x - c.mouseDownPos.x, y: y - c.mouseDownPos.y }  // find mouse displesment
 
-        c.mouseMoveEle.map(({ element, pos }) => {
+        c.mouseMoveEle.map(({ element, pos }) => { // loop of selected elements
             if (element.prop.type !== 'none') {
+                // if element type is not none
 
-                element.setPos({ x: pos.x + dispPos.x, y: pos.y + dispPos.y })
-                // console.log({ x: dispPos.x, y: dispPos.y });
-
+                element.setPos({ x: pos.x + disp.x, y: pos.y + disp.y }) // set position is position + disp
                 this.render()
-
             }
         })
 
     }
 
     private mouseMoveUpEvent(c: Canvas) {
-        c.selectProp.mouseLock = false
+        c.selectProp.mouseLock = false // set mouse unlock
     }
 
 }

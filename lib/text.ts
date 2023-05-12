@@ -1,11 +1,19 @@
+// Copyright (c) 2023 Parth Degama
+// This code is licensed under MIT license
+
+// fill text element
+
 import { CanvasElement } from "./element"
 import { Position } from "./position"
 
 interface FillTextInfo {
     type: 'text';
+
     text: string;
+
     textIsEnv: boolean;
     textFont: string;
+    
     textSize: number;
     textWidth: number;
     pos: Position
