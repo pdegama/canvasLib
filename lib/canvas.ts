@@ -13,6 +13,7 @@ class Canvas {
     private eleSlect: boolean = false
     private mouseDownPos: Position
     private mouseMoveEle: [SelectEleWithPos]
+    private notDeselectLock: boolean
 
     constructor(canvas: any) {
 
@@ -26,6 +27,8 @@ class Canvas {
 
         this.mouseDownPos = { x: 0, y: 0 }
         this.mouseMoveEle = [{ element: new NoneElement(), pos: { x: 0, y: 0 } }]
+
+        this.notDeselectLock = false
 
         var c = this
         window.addEventListener("keyup", (e) => {
@@ -49,6 +52,12 @@ class Canvas {
             var c = this
 
             this.canvas.addEventListener("mousedown", (e: any) => {
+
+                if (c.mouseMoveEle.length > 2) {
+                    this.notDeselectLock = true
+                }
+
+                c.mouseMoveEle = [{ element: new NoneElement(), pos: { x: 0, y: 0 } }]
                 this.canvasClickEvent(e, c) // first select
                 this.mouseMoveDownEvent(e, c)
             })
@@ -139,8 +148,11 @@ class Canvas {
 
         c.elements.map((element) => {
 
-            if (!c.selectProp.multiLock) element.deselect()
-
+            if (!c.selectProp.multiLock) {
+                if (!c.notDeselectLock) {
+                    element.deselect()
+                }
+            }
 
             let start = element.getPos();
             let end = { x: start.x + element.getWidth(), y: start.y + element.getHeight() }
@@ -151,19 +163,29 @@ class Canvas {
 
         })
 
-
         if (selectEle.prop.type != 'none') {
 
-            if (this.eleSlect) {
+            if (c.eleSlect) {
                 if (!selectEle.prop.selected) {
+                    if (!c.selectProp.multiLock) {
+                        if (c.notDeselectLock) {
+                            c.notDeselectLock = false
+                            c.elements.map((element) => element.deselect())
+                        }
+                    }
                     selectEle.select()
                 } else {
-                    selectEle.deselect()
+                    if (c.selectProp.multiLock) {
+                        selectEle.deselect()
+                    }
                 }
             }
 
             if (selectEle.prop.onclick) selectEle.prop.onclick(selectEle)
 
+        } else {
+            c.notDeselectLock = false
+            c.elements.map((element) => element.deselect())
         }
 
         this.render()
@@ -241,7 +263,6 @@ class Canvas {
 
     private mouseMoveUpEvent(c: Canvas) {
         c.selectProp.mouseLock = false
-        c.mouseMoveEle = [{ element: new NoneElement(), pos: { x: 0, y: 0 } }]
     }
 
 }
