@@ -11,7 +11,7 @@ type SelectProp = {
     multiSelect?: boolean;
     multiLock: boolean; // multi select lock
     moveByMouse?: boolean;
-    mouseLock: boolean; // mouse lock
+    mouseMoveLock: boolean; // mouse lock
     resize?: boolean;
 }
 

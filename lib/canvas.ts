@@ -26,8 +26,9 @@ class Canvas {
         this.context = this.canvas.getContext("2d")
         this.selectProp = {
             multiLock: false,
-            mouseLock: false,
+            mouseMoveLock: false,
             resize: false,
+            moveByMouse: false,
         }
 
         this.mouseDownPos = { x: 0, y: 0 }
@@ -69,7 +70,7 @@ class Canvas {
                     this.notDeselectLock = true
                 }
 
-                c.mouseMoveEle = [{ element: new NoneElement(), pos: { x: 0, y: 0 } }]
+                // c.mouseMoveEle = [{ element: new NoneElement(), pos: { x: 0, y: 0 } }]
 
                 this.elementSelectEvent(e, c)  // first select canvas element
                 this.mouseMoveDownEvent(e, c)  // and mouse move event
@@ -239,7 +240,7 @@ class Canvas {
 
     private mouseMoveDownEvent(e: any, c: Canvas) {
 
-        c.selectProp.mouseLock = true // set mouse lock
+        c.selectProp.mouseMoveLock = true // set mouse lock
 
         // get mouse position in canvas
         let x = e.clientX - e.target.getBoundingClientRect().x
@@ -262,7 +263,8 @@ class Canvas {
 
     private mouseMoveEvent(e: any, c: Canvas) {
 
-        if (!c.selectProp.mouseLock) return // if mouse is not lock then return function
+        if (!c.selectProp.moveByMouse) return // if move by mouse is false then return this function
+        if (!c.selectProp.mouseMoveLock) return // if mouse is not lock then return function
 
         // get mouse position in canvas
         let x = e.clientX - e.target.getBoundingClientRect().x
@@ -282,7 +284,7 @@ class Canvas {
     }
 
     private mouseMoveUpEvent(c: Canvas) {
-        c.selectProp.mouseLock = false // set mouse unlock
+        c.selectProp.mouseMoveLock = false // set mouse unlock
     }
 
 }
