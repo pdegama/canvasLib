@@ -13,9 +13,12 @@ interface FillTextProp {
 
     textIsEnv: boolean;
     textFont: string;
-    
+
     textSize: number;
     textWidth: number;
+
+    textWidthAuto?: boolean;
+
     pos: Position
     onclick?: Function;
 
@@ -37,11 +40,12 @@ class FillText extends CanvasElement {
             textIsEnv: false,
             textFont: "Verdana",
             textSize: 22,
-            textWidth: -1,
+            textWidth: 0,
+            textWidthAuto: true,
             pos: { x: 10, y: 10 },
 
             height: 22,
-            width: -1
+            width: 0
         }
     }
 
@@ -68,6 +72,14 @@ class FillText extends CanvasElement {
 
     public onclick(cb: Function) {
         this.prop.onclick = cb
+    }
+
+    public textWidthAutoSet(b: boolean) {
+        this.prop.textWidthAuto = b
+    }
+
+    public textWidthAutoGet(): boolean {
+        return this.prop.textWidthAuto || false
     }
 
 }

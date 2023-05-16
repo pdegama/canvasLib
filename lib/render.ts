@@ -19,7 +19,10 @@ function renderText(c: CanvasRenderingContext2D, element: CanvasElement, element
     }
 
     let textWidth = c.measureText(elementProp.text || "Text Field").width
-    element.setWidth(textWidth || -1)
+    
+    if (elementProp.textWidthAuto) {
+        element.setWidth(textWidth)
+    }
 
     if (elementProp.selected) {
         if (c.fillStyle) {
