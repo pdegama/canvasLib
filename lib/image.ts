@@ -17,6 +17,8 @@ interface ImageProp {
     height: number;
     width: number;
 
+    autoSize?: boolean;
+
     selected?: boolean;
     isLoad?: boolean;
 }
@@ -33,8 +35,10 @@ class FillImage extends CanvasElement {
 
             pos: { x: 10, y: 10 },
 
-            height: -1,
-            width: -1,
+            height: 0,
+            width: 0,
+
+            autoSize: true,
 
             isLoad: false
         }
@@ -42,6 +46,7 @@ class FillImage extends CanvasElement {
 
     public setSrc(src: string) {
         this.prop.src = src
+        this.prop.isLoad = false
     }
 
     public setWidth(w: number) {
@@ -64,12 +69,20 @@ class FillImage extends CanvasElement {
         this.prop.onclick = cb
     }
 
-    public getLoad(b: boolean):boolean {
+    public getLoad(b: boolean): boolean {
         return this.prop.isLoad || false
     }
-    
+
     public setLoad(b: boolean) {
         this.prop.isLoad = b
+    }
+
+    public autoSizeSet(b: boolean) {
+        this.prop.autoSize = b
+    }
+
+    public autoSizeGet(): boolean {
+        return this.prop.autoSize || false
     }
 
 }

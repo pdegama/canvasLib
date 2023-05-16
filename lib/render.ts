@@ -41,16 +41,42 @@ function renderImage(c: CanvasRenderingContext2D, element: CanvasElement, elemen
     img.src = elementProp.src
 
     if (elementProp.isLoad) {
-        element.setHeight(elementProp.height == -1 ? img.height : elementProp.height)
-        element.setWidth(elementProp.width == -1 ? img.width : elementProp.width)
-        c.drawImage(img, elementProp.pos.x, elementProp.pos.y, element.getHeight(), element.getWidth())
+
+        if (elementProp.autoSize) {
+            element.setHeight(img.height)
+            element.setWidth(img.width)
+        }
+
+        if (elementProp.selected) {
+            if (c.fillStyle) {
+                c.fillStyle = "#000fb3cc"
+            }
+            c.fillRect(elementProp.pos.x - 2, elementProp.pos.y - 2, element.getWidth() + 4, element.getHeight() + 4)
+        }
+
+        c.drawImage(img, elementProp.pos.x, elementProp.pos.y, element.getWidth(), element.getHeight())
+
     } else {
+
         img.onload = () => {
-            element.setHeight(elementProp.height == -1 ? img.height : elementProp.height)
-            element.setWidth(elementProp.width == -1 ? img.width : elementProp.width)
-            c.drawImage(img, elementProp.pos.x, elementProp.pos.y, element.getHeight(), element.getWidth())
+
+            if (elementProp.autoSize) {
+                element.setHeight(img.height)
+                element.setWidth(img.width)
+            }
+
+            if (elementProp.selected) {
+                if (c.fillStyle) {
+                    c.fillStyle = "#000fb3cc"
+                }
+                c.fillRect(elementProp.pos.x - 2, elementProp.pos.y - 2, element.getWidth() + 4, element.getHeight() + 4)
+            }
+
+            c.drawImage(img, elementProp.pos.x, elementProp.pos.y, element.getWidth(), element.getHeight())
+
             elementProp.isLoad = true
         }
+
     }
 }
 
