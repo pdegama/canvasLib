@@ -7,6 +7,7 @@ import { CanvasElement } from "./element"
 import { NoneElement } from "./noneelement"
 import { Position } from "./position"
 import { SelectProp, SelectEleWithPos } from "./select"
+import { FillTextInfo } from "./text"
 
 class Canvas {
 
@@ -108,36 +109,14 @@ class Canvas {
     public render() {
         this.context?.clearRect(0, 0, this.canvas.width, this.canvas.height)
 
-        this.elements.map((element, elementIndex) => {
+        this.elements.map((element) => {
 
             let elementProp = element.getProp()
             switch (elementProp.type) {
                 case 'text':
-
-                    if (this.context?.textBaseline) {
-                        this.context.textBaseline = "top"
+                    if (this.context) {
+                        renderText(this.context, element, elementProp)
                     }
-
-                    if (this.context?.font) {
-                        this.context.font = `${elementProp.textSize}px ${elementProp.textFont}`
-                    }
-
-                    let textWidth = this.context?.measureText(elementProp.text || "Text Field").width
-                    this.elements[elementIndex].setWidth(textWidth || -1)
-
-                    if (elementProp.selected) {
-                        if (this.context?.fillStyle) {
-                            this.context.fillStyle = "#4d90e855"
-                        }
-                        this.context?.fillRect(elementProp.pos.x, elementProp.pos.y, this.elements[elementIndex].getWidth(), elementProp.textSize)
-                    }
-
-                    if (this.context?.fillStyle) {
-                        this.context.fillStyle = "black"
-                    }
-
-                    this.context?.fillText(elementProp.text || "Text Field", elementProp.pos.x, elementProp.pos.y, textWidth)
-
                     break;
 
                 case 'none':
@@ -286,6 +265,33 @@ class Canvas {
     private mouseMoveUpEvent(c: Canvas) {
         c.selectProp.mouseMoveLock = false // set mouse unlock
     }
+
+}
+
+function renderText(c: CanvasRenderingContext2D, element: CanvasElement, elementProp: FillTextInfo) {
+    if (c.textBaseline) {
+        c.textBaseline = "top"
+    }
+
+    if (c.font) {
+        c.font = `${elementProp.textSize}px ${elementProp.textFont}`
+    }
+
+    let textWidth = c.measureText(elementProp.text || "Text Field").width
+    element.setWidth(textWidth || -1)
+
+    if (elementProp.selected) {
+        if (c.fillStyle) {
+            c.fillStyle = "#4d90e855"
+        }
+        c.fillRect(elementProp.pos.x, elementProp.pos.y, element.getWidth(), elementProp.textSize)
+    }
+
+    if (c.fillStyle) {
+        c.fillStyle = "black"
+    }
+
+    c.fillText(elementProp.text || "Text Field", elementProp.pos.x, elementProp.pos.y, textWidth)
 
 }
 
