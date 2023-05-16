@@ -4,10 +4,11 @@
 // render function
 
 import { CanvasElement } from "./element"
-import { FillTextInfo } from "./text"
+import { FillTextProp } from "./text"
+import { ImageProp } from "./image"
 
 // text render code
-function renderText(c: CanvasRenderingContext2D, element: CanvasElement, elementProp: FillTextInfo) {
+function renderText(c: CanvasRenderingContext2D, element: CanvasElement, elementProp: FillTextProp) {
 
     if (c.textBaseline) {
         c.textBaseline = "top"
@@ -35,4 +36,22 @@ function renderText(c: CanvasRenderingContext2D, element: CanvasElement, element
 
 }
 
-export { renderText }
+function renderImage(c: CanvasRenderingContext2D, element: CanvasElement, elementProp: ImageProp) {
+    let img = new Image()
+    img.src = elementProp.src
+
+    if (elementProp.isLoad) {
+        element.setHeight(elementProp.height == -1 ? img.height : elementProp.height)
+        element.setWidth(elementProp.width == -1 ? img.width : elementProp.width)
+        c.drawImage(img, elementProp.pos.x, elementProp.pos.y, element.getHeight(), element.getWidth())
+    } else {
+        img.onload = () => {
+            element.setHeight(elementProp.height == -1 ? img.height : elementProp.height)
+            element.setWidth(elementProp.width == -1 ? img.width : elementProp.width)
+            c.drawImage(img, elementProp.pos.x, elementProp.pos.y, element.getHeight(), element.getWidth())
+            elementProp.isLoad = true
+        }
+    }
+}
+
+export { renderText, renderImage }

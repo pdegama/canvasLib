@@ -7,7 +7,7 @@ import { CanvasElement } from "./element"
 import { NoneElement } from "./noneelement"
 import { Position } from "./position"
 import { SelectProp, SelectEleWithPos } from "./select"
-import { renderText } from "./render"
+import { renderText, renderImage } from "./render"
 
 class Canvas {
 
@@ -107,19 +107,31 @@ class Canvas {
     }
 
     public render() {
-        this.context?.clearRect(0, 0, this.canvas.width, this.canvas.height)
 
-        this.elements.map((element) => {
+        // render all element in canvas
 
-            let elementProp = element.getProp()
+        this.context?.clearRect(0, 0, this.canvas.width, this.canvas.height) // clear canvas
+
+        this.elements.map((element) => { // loop of elements
+
+            let elementProp = element.getProp() // get element info
             switch (elementProp.type) {
                 case 'text':
+                    // if  text
                     if (this.context) {
                         renderText(this.context, element, elementProp)
                     }
                     break;
 
+                case 'image':
+                    // if image
+                    if (this.context) {
+                        renderImage(this.context, element, elementProp)
+                    }
+                    break;
+
                 case 'none':
+                    // if element is none
 
                     break;
             }
@@ -165,7 +177,6 @@ class Canvas {
                             c.elements.map((element) => element.deselect())
                         }
                     }
-
                     selectEle.select()
 
                 } else {
@@ -256,6 +267,8 @@ class Canvas {
                 // if element type is not none
 
                 element.setPos({ x: pos.x + disp.x, y: pos.y + disp.y }) // set position is position + disp
+                console.log("move...");
+                
                 this.render()
             }
         })

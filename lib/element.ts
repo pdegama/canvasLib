@@ -4,12 +4,13 @@
 // canvas element
 
 import { Position } from "./position";
-import { FillTextInfo } from "./text";
+import { FillTextProp } from "./text";
+import { ImageProp } from "./image"
 import { NoneElementInfo } from "./noneelement";
 
 abstract class CanvasElement {
 
-    abstract prop: FillTextInfo | NoneElementInfo
+    abstract prop: FillTextProp | ImageProp | NoneElementInfo
 
     public setWidth(w: number) {
         this.prop.width = w
@@ -43,7 +44,7 @@ abstract class CanvasElement {
         this.prop.selected = false
     }
 
-    public getProp(): FillTextInfo | NoneElementInfo {
+    public getProp(): FillTextProp | ImageProp | NoneElementInfo {
         return this.prop
     }
 

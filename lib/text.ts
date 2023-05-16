@@ -6,7 +6,7 @@
 import { CanvasElement } from "./element"
 import { Position } from "./position"
 
-interface FillTextInfo {
+interface FillTextProp {
     type: 'text';
 
     text: string;
@@ -27,7 +27,7 @@ interface FillTextInfo {
 
 class FillText extends CanvasElement {
 
-    prop: FillTextInfo
+    prop: FillTextProp
 
     constructor() {
         super()
@@ -74,4 +74,4 @@ class FillText extends CanvasElement {
 
 
 export { FillText }
-export type { FillTextInfo }
+export type { FillTextProp }
