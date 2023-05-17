@@ -8,6 +8,7 @@ import { NoneElement } from "./noneelement"
 import { Position } from "./position"
 import { SelectProp, SelectEleWithPos } from "./select"
 import { renderText, renderImage } from "./render"
+import { FillText } from "."
 
 class Canvas {
 
@@ -18,8 +19,10 @@ class Canvas {
 
     private eleSlect: boolean = false // canvas elements is selectable
     private mouseDownPos: Position // if mouse down in canvas then set mouse position in canvas
-    private mouseMoveEle: [SelectEleWithPos]
+    private mouseMoveEle: [SelectEleWithPos] // mouse move then the elements move with mouse
     private notDeselectLock: boolean // not deselect element
+
+    private resizeText: FillText | undefined // current resize text selection
 
     constructor(canvas: any) {
 
@@ -36,6 +39,8 @@ class Canvas {
         this.mouseMoveEle = [{ element: new NoneElement(), pos: { x: 0, y: 0 } }] // init, stor none element
 
         this.notDeselectLock = false
+
+        this.resizeText = undefined
 
         var c = this
         window.addEventListener("keyup", (e) => {
@@ -162,6 +167,13 @@ class Canvas {
                 selectEle = element
             }
 
+            if (element.prop.type == 'text' && !element.prop.textWidthAuto) {
+                if ((x >= end.x && x <= end.x + 6) && (y >= start.y && y <= end.y)) {
+                    selectEle = element
+                    c.resizeText = element as FillText
+                }
+            }
+
         })
 
         if (selectEle.prop.type != 'none') {
@@ -260,6 +272,19 @@ class Canvas {
         let x = e.clientX - e.target.getBoundingClientRect().x
         let y = e.clientY - e.target.getBoundingClientRect().y
 
+        if (c.resizeText) {
+            // if resize text is not undefined then resize text width and retu function 
+
+            c.canvas.style.cursor = 'col-resize'
+
+            let w = x - c.resizeText.getPos().x // text width
+            c.resizeText.setWidth(w) // set width
+
+            c.render()
+
+            return
+        }
+
         let disp = { x: x - c.mouseDownPos.x, y: y - c.mouseDownPos.y }  // find mouse displesment
 
         c.mouseMoveEle.map(({ element, pos }) => { // loop of selected elements
@@ -268,8 +293,8 @@ class Canvas {
 
                 element.setPos({ x: pos.x + disp.x, y: pos.y + disp.y }) // set position is position + disp
                 // console.log("move...");
-                
-                this.render()
+
+                c.render()
             }
         })
 
@@ -277,6 +302,8 @@ class Canvas {
 
     private mouseMoveUpEvent(c: Canvas) {
         c.selectProp.mouseMoveLock = false // set mouse unlock
+        c.resizeText = undefined // set resize text element unlock
+        c.canvas.style.cursor = 'default' // set cursor default
     }
 
 }
