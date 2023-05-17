@@ -24,20 +24,20 @@ function renderText(c: CanvasRenderingContext2D, element: CanvasElement, element
         element.setWidth(textWidth)
     }
 
-    if (!elementProp.textWidthAuto) {
-        if (elementProp.selected) {
+    if (elementProp.selected) {
+
+        if (!elementProp.textWidthAuto) {
             if (c.fillStyle) {
                 c.fillStyle = "#000fb3cc"
             }
 
             c.fillRect(elementProp.pos.x + element.getWidth(), elementProp.pos.y, 6, elementProp.textSize)
         }
-    }
 
-    if (elementProp.selected) {
         if (c.fillStyle) {
             c.fillStyle = "#4d90e855"
         }
+
         c.fillRect(elementProp.pos.x, elementProp.pos.y, element.getWidth(), elementProp.textSize)
     }
 
@@ -62,12 +62,20 @@ function renderImage(c: CanvasRenderingContext2D, element: CanvasElement, elemen
 
         if (elementProp.selected) {
             if (c.fillStyle) {
-                c.fillStyle = "#000fb3cc"
+                c.fillStyle = "#4d90e855"
             }
             c.fillRect(elementProp.pos.x - 2, elementProp.pos.y - 2, element.getWidth() + 4, element.getHeight() + 4)
         }
 
         c.drawImage(img, elementProp.pos.x, elementProp.pos.y, element.getWidth(), element.getHeight())
+
+        if (!elementProp.autoSize && elementProp.selected) {
+            if (c.fillStyle) {
+                c.fillStyle = "#000fb3cc"
+            }
+
+            c.fillRect(elementProp.pos.x + element.getWidth() - 3, elementProp.pos.y + element.getHeight() - 3, 6, 6)
+        }
 
     } else {
 
@@ -80,12 +88,20 @@ function renderImage(c: CanvasRenderingContext2D, element: CanvasElement, elemen
 
             if (elementProp.selected) {
                 if (c.fillStyle) {
-                    c.fillStyle = "#000fb3cc"
+                    c.fillStyle = "#4d90e855"
                 }
                 c.fillRect(elementProp.pos.x - 2, elementProp.pos.y - 2, element.getWidth() + 4, element.getHeight() + 4)
             }
 
             c.drawImage(img, elementProp.pos.x, elementProp.pos.y, element.getWidth(), element.getHeight())
+
+            if (!elementProp.autoSize && elementProp.selected) {
+                if (c.fillStyle) {
+                    c.fillStyle = "#000fb3cc"
+                }
+    
+                c.fillRect(elementProp.pos.x + element.getWidth() - 3, elementProp.pos.y + element.getHeight() - 3, 6, 6)
+            }
 
             elementProp.isLoad = true
         }

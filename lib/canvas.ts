@@ -22,7 +22,7 @@ class Canvas {
     private mouseMoveEle: [SelectEleWithPos] // mouse move then the elements move with mouse
     private notDeselectLock: boolean // not deselect element
 
-    private resizeText: FillText | undefined // current resize text selection
+    private resizeEle: CanvasElement | undefined // current resize text selection
 
     constructor(canvas: any) {
 
@@ -40,7 +40,7 @@ class Canvas {
 
         this.notDeselectLock = false
 
-        this.resizeText = undefined
+        this.resizeEle = undefined
 
         var c = this
         window.addEventListener("keyup", (e) => {
@@ -165,13 +165,19 @@ class Canvas {
             if ((x >= start.x && x <= end.x) && (y >= start.y && y <= end.y)) {
                 // if select element is find 
                 selectEle = element
+                c.resizeEle = undefined
             }
 
             if (element.prop.type == 'text' && !element.prop.textWidthAuto) {
                 if ((x >= end.x && x <= end.x + 6) && (y >= start.y && y <= end.y)) {
                     selectEle = element
-                    c.resizeText = element as FillText
+                    c.resizeEle = element as FillText
                 }
+            } else if (element.prop.type == 'image' && !element.prop.autoSize) {
+                //if ((x >= end.x && x <= end.x + 6) && (y >= start.y && y <= end.y)) {
+                //    selectEle = element
+                //    c.resizeText = element as FillText
+                //}
             }
 
         })
@@ -243,13 +249,13 @@ class Canvas {
         let x = e.clientX - e.target.getBoundingClientRect().x
         let y = e.clientY - e.target.getBoundingClientRect().y
 
-        if (c.resizeText) {
+        if (c.resizeEle) {
             // if resize text is not undefined then resize text width and retu function 
 
             c.canvas.style.cursor = 'ew-resize' // change curser
 
-            let w = x - c.resizeText.getPos().x // text width
-            c.resizeText.setWidth(w < 0 ? 0 : w) // set width
+            let w = x - c.resizeEle.getPos().x // text width
+            c.resizeEle.setWidth(w < 0 ? 0 : w) // set width
 
             c.render()
 
@@ -277,7 +283,7 @@ class Canvas {
 
     private mouseMoveUpEvent(c: Canvas) {
         c.selectProp.mouseMoveLock = false // set mouse unlock
-        c.resizeText = undefined // set resize text element unlock
+        c.resizeEle = undefined // set resize text element unlock
         c.canvas.style.cursor = 'default' // set cursor default
     }
 
