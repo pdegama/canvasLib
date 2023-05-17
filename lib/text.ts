@@ -74,11 +74,11 @@ class FillText extends CanvasElement {
         this.prop.onclick = cb
     }
 
-    public textWidthAutoSet(b: boolean) {
+    public setTextWidthAuto(b: boolean) {
         this.prop.textWidthAuto = b
     }
 
-    public textWidthAutoGet(): boolean {
+    public getTextWidthAuto(): boolean {
         return this.prop.textWidthAuto || false
     }
 
