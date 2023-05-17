@@ -77,11 +77,11 @@ class FillImage extends CanvasElement {
         this.prop.isLoad = b
     }
 
-    public autoSizeSet(b: boolean) {
+    public setAutoSize(b: boolean) {
         this.prop.autoSize = b
     }
 
-    public autoSizeGet(): boolean {
+    public getAutoSize(): boolean {
         return this.prop.autoSize || false
     }
 
