@@ -210,16 +210,16 @@ class Canvas {
                 let pos = element.getPos() // get selected element position
                 switch (e.key) {
                     case "ArrowDown":
-                        element.setPos({ x: pos.x, y: pos.y + 5 })
+                        element.setPos({ x: pos.x, y: pos.y + 1 })
                         break
                     case "ArrowUp":
-                        element.setPos({ x: pos.x, y: pos.y - 5 })
+                        element.setPos({ x: pos.x, y: pos.y - 1 })
                         break
                     case "ArrowLeft":
-                        element.setPos({ x: pos.x - 5, y: pos.y })
+                        element.setPos({ x: pos.x - 1, y: pos.y })
                         break
                     case "ArrowRight":
-                        element.setPos({ x: pos.x + 5, y: pos.y })
+                        element.setPos({ x: pos.x + 1, y: pos.y })
                         break
                 }
                 this.render()
@@ -244,8 +244,8 @@ class Canvas {
             if (element.prop.selected) {
                 // if element is selected then add to mouseMoveEle
                 c.mouseMoveEle.push({ element, pos: element.getPos() })
-                console.log("add");
-                console.log(c.mouseMoveEle);
+                //console.log("add");
+                //console.log(c.mouseMoveEle);
             }
         })
 
@@ -267,7 +267,7 @@ class Canvas {
                 // if element type is not none
 
                 element.setPos({ x: pos.x + disp.x, y: pos.y + disp.y }) // set position is position + disp
-                console.log("move...");
+                // console.log("move...");
                 
                 this.render()
             }
