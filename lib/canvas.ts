@@ -211,35 +211,6 @@ class Canvas {
         this.render()
     }
 
-    private arrowKeyEvent(e: any, c: Canvas) {
-
-        if (c.selectProp.moveByArrow == undefined || !c.selectProp.moveByArrow) {
-            return // if element is not move by arrow key then return this function
-        }
-
-        c.elements.map((element) => {
-            if (element.prop.selected) {
-                let pos = element.getPos() // get selected element position
-                switch (e.key) {
-                    case "ArrowDown":
-                        element.setPos({ x: pos.x, y: pos.y + 1 })
-                        break
-                    case "ArrowUp":
-                        element.setPos({ x: pos.x, y: pos.y - 1 })
-                        break
-                    case "ArrowLeft":
-                        element.setPos({ x: pos.x - 1, y: pos.y })
-                        break
-                    case "ArrowRight":
-                        element.setPos({ x: pos.x + 1, y: pos.y })
-                        break
-                }
-                this.render()
-            }
-        })
-
-    }
-
     private mouseMoveDownEvent(e: any, c: Canvas) {
 
         c.selectProp.mouseMoveLock = true // set mouse lock
@@ -304,6 +275,35 @@ class Canvas {
         c.selectProp.mouseMoveLock = false // set mouse unlock
         c.resizeText = undefined // set resize text element unlock
         c.canvas.style.cursor = 'default' // set cursor default
+    }
+
+    private arrowKeyEvent(e: any, c: Canvas) {
+
+        if (c.selectProp.moveByArrow == undefined || !c.selectProp.moveByArrow) {
+            return // if element is not move by arrow key then return this function
+        }
+
+        c.elements.map((element) => {
+            if (element.prop.selected) {
+                let pos = element.getPos() // get selected element position
+                switch (e.key) {
+                    case "ArrowDown":
+                        element.setPos({ x: pos.x, y: pos.y + 1 })
+                        break
+                    case "ArrowUp":
+                        element.setPos({ x: pos.x, y: pos.y - 1 })
+                        break
+                    case "ArrowLeft":
+                        element.setPos({ x: pos.x - 1, y: pos.y })
+                        break
+                    case "ArrowRight":
+                        element.setPos({ x: pos.x + 1, y: pos.y })
+                        break
+                }
+                this.render()
+            }
+        })
+
     }
 
 }
