@@ -246,10 +246,10 @@ class Canvas {
         if (c.resizeText) {
             // if resize text is not undefined then resize text width and retu function 
 
-            c.canvas.style.cursor = 'col-resize'
+            c.canvas.style.cursor = 'ew-resize' // change curser
 
             let w = x - c.resizeText.getPos().x // text width
-            c.resizeText.setWidth(w) // set width
+            c.resizeText.setWidth(w < 0 ? 0 : w) // set width
 
             c.render()
 
@@ -257,6 +257,10 @@ class Canvas {
         }
 
         let disp = { x: x - c.mouseDownPos.x, y: y - c.mouseDownPos.y }  // find mouse displesment
+
+        if (c.mouseMoveEle.length != 1) {
+            c.canvas.style.cursor = 'move' // change curser
+        }
 
         c.mouseMoveEle.map(({ element, pos }) => { // loop of selected elements
             if (element.prop.type !== 'none') {
