@@ -24,6 +24,8 @@ class Canvas {
 
     private resizeEle: CanvasElement | undefined // current resize text selection
 
+    private canvasBackground: HTMLImageElement | undefined // background
+
     constructor(canvas: any) {
 
         this.canvas = canvas
@@ -54,9 +56,9 @@ class Canvas {
         this.context = this.canvas.getContext("2d")
     }
 
-    public selectable(selectable: boolean, selectProp: SelectProp) {
+    public selectable(selectable: boolean, selectProp: any) {
         this.eleSlect = selectable
-        this.selectProp = selectProp
+        this.selectProp = { ...this.selectProp, ...selectProp }
     }
 
     public clickable(clickable: boolean) {
@@ -111,11 +113,19 @@ class Canvas {
         this.elements.push(element)
     }
 
+    public setBackground(bg: HTMLImageElement) {
+        this.canvasBackground = bg
+    }
+
     public render() {
 
         // render all element in canvas
 
         this.context?.clearRect(0, 0, this.canvas.width, this.canvas.height) // clear canvas
+
+        if (this.canvasBackground) {
+            this.context?.drawImage(this.canvasBackground, 0, 0)
+        }
 
         this.elements.map((element) => { // loop of elements
 

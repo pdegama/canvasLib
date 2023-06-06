@@ -9,7 +9,7 @@ import { Position } from "./position";
 interface ImageProp {
     type: 'image';
 
-    src: string;
+    src: HTMLImageElement;
 
     pos: Position
     onclick?: Function;
@@ -31,7 +31,7 @@ class FillImage extends CanvasElement {
         super()
         this.prop = {
             type: 'image',
-            src: "",
+            src: new Image(),
 
             pos: { x: 10, y: 10 },
 
@@ -44,7 +44,7 @@ class FillImage extends CanvasElement {
         }
     }
 
-    public setSrc(src: string) {
+    public setSrc(src: HTMLImageElement) {
         this.prop.src = src
         this.prop.isLoad = false
     }

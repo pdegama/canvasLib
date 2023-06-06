@@ -49,64 +49,31 @@ function renderText(c: CanvasRenderingContext2D, element: CanvasElement, element
 
 }
 
+// image render code
 function renderImage(c: CanvasRenderingContext2D, element: CanvasElement, elementProp: ImageProp) {
-    let img = new Image()
-    img.src = elementProp.src
 
-    if (elementProp.isLoad) {
-
-        if (elementProp.autoSize) {
-            element.setHeight(img.height)
-            element.setWidth(img.width)
-        }
-
-        if (elementProp.selected) {
-            if (c.fillStyle) {
-                c.fillStyle = "#4d90e855"
-            }
-            c.fillRect(elementProp.pos.x - 2, elementProp.pos.y - 2, element.getWidth() + 4, element.getHeight() + 4)
-        }
-
-        c.drawImage(img, elementProp.pos.x, elementProp.pos.y, element.getWidth(), element.getHeight())
-
-        if (!elementProp.autoSize && elementProp.selected) {
-            if (c.fillStyle) {
-                c.fillStyle = "#000fb3cc"
-            }
-
-            c.fillRect(elementProp.pos.x + element.getWidth() - 3, elementProp.pos.y + element.getHeight() - 3, 6, 6)
-        }
-
-    } else {
-
-        img.onload = () => {
-
-            if (elementProp.autoSize) {
-                element.setHeight(img.height)
-                element.setWidth(img.width)
-            }
-
-            if (elementProp.selected) {
-                if (c.fillStyle) {
-                    c.fillStyle = "#4d90e855"
-                }
-                c.fillRect(elementProp.pos.x - 2, elementProp.pos.y - 2, element.getWidth() + 4, element.getHeight() + 4)
-            }
-
-            c.drawImage(img, elementProp.pos.x, elementProp.pos.y, element.getWidth(), element.getHeight())
-
-            if (!elementProp.autoSize && elementProp.selected) {
-                if (c.fillStyle) {
-                    c.fillStyle = "#000fb3cc"
-                }
-    
-                c.fillRect(elementProp.pos.x + element.getWidth() - 3, elementProp.pos.y + element.getHeight() - 3, 6, 6)
-            }
-
-            elementProp.isLoad = true
-        }
-
+    if (elementProp.autoSize) {
+        element.setHeight(elementProp.src.height)
+        element.setWidth(elementProp.src.width)
     }
+
+    if (elementProp.selected) {
+        if (c.fillStyle) {
+            c.fillStyle = "#4d90e855"
+        }
+        c.fillRect(elementProp.pos.x - 2, elementProp.pos.y - 2, element.getWidth() + 4, element.getHeight() + 4)
+    }
+
+    c.drawImage(elementProp.src, elementProp.pos.x, elementProp.pos.y, element.getWidth(), element.getHeight())
+
+    if (!elementProp.autoSize && elementProp.selected) {
+        if (c.fillStyle) {
+            c.fillStyle = "#000fb3cc"
+        }
+
+        c.fillRect(elementProp.pos.x + element.getWidth() - 3, elementProp.pos.y + element.getHeight() - 3, 6, 6)
+    }
+
 }
 
 export { renderText, renderImage }
