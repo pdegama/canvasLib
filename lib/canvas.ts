@@ -8,7 +8,7 @@ import { NoneElement } from "./noneelement"
 import { Position } from "./position"
 import { SelectProp, SelectEleWithPos } from "./select"
 import { renderText, renderImage } from "./render"
-import { FillText } from "."
+import { FillImage, FillText } from "."
 
 class Canvas {
 
@@ -184,10 +184,10 @@ class Canvas {
                     c.resizeEle = element as FillText
                 }
             } else if (element.prop.type == 'image' && !element.prop.autoSize) {
-                //if ((x >= end.x && x <= end.x + 6) && (y >= start.y && y <= end.y)) {
-                //    selectEle = element
-                //    c.resizeText = element as FillText
-                //}
+                if ((x >= end.x - 2 && x <= end.x + 2) && (y >= start.y - 2 && y <= end.y + 2)) {
+                    selectEle = element
+                    c.resizeEle = element as FillImage
+                }
             }
 
         })
@@ -262,14 +262,32 @@ class Canvas {
         if (c.resizeEle) {
             // if resize text is not undefined then resize text width and retu function 
 
-            c.canvas.style.cursor = 'ew-resize' // change curser
+            if (c.resizeEle.prop.type === 'text') {
+                c.canvas.style.cursor = 'ew-resize' // change curser
 
-            let w = x - c.resizeEle.getPos().x // text width
-            c.resizeEle.setWidth(w < 0 ? 0 : w) // set width
+                let w = x - c.resizeEle.getPos().x // text width
+                c.resizeEle.setWidth(w < 0 ? 0 : w) // set width
 
-            c.render()
+                c.render()
 
-            return
+                return
+            }
+
+            if (c.resizeEle.prop.type === 'image') {
+                c.canvas.style.cursor = 'se-resize' // change curser
+
+                let pos = c.resizeEle.getPos()
+
+                let w = x - pos.x// text width
+                let h = y - pos.y// text height
+
+                c.resizeEle.setWidth(w < 0 ? 0 : w)
+                c.resizeEle.setHeight(h < 0 ? 0 : h)
+
+                c.render()
+                return
+            }
+
         }
 
         let disp = { x: x - c.mouseDownPos.x, y: y - c.mouseDownPos.y }  // find mouse displesment
