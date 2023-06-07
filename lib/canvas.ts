@@ -10,6 +10,10 @@ import { SelectProp, SelectEleWithPos } from "./select"
 import { renderText, renderImage } from "./render"
 import { FillImage, FillText } from "."
 
+type EnvType = {
+    [key: string]: string | number | HTMLImageElement;
+};
+
 class Canvas {
 
     private canvas: HTMLCanvasElement // canvas
@@ -25,6 +29,8 @@ class Canvas {
     private resizeEle: CanvasElement | undefined // current resize text selection
 
     private canvasBackground: HTMLImageElement | undefined // background
+
+    public envs: EnvType // envs
 
     constructor(canvas: any) {
 
@@ -43,6 +49,8 @@ class Canvas {
         this.notDeselectLock = false
 
         this.resizeEle = undefined
+
+        this.envs = {}
 
         var c = this
         window.addEventListener("keyup", (e) => {
@@ -134,14 +142,14 @@ class Canvas {
                 case 'text':
                     // if  text
                     if (this.context) {
-                        renderText(this.context, element, elementProp)
+                        renderText(this, this.context, element, elementProp)
                     }
                     break;
 
                 case 'image':
                     // if image
                     if (this.context) {
-                        renderImage(this.context, element, elementProp)
+                        renderImage(this, this.context, element, elementProp)
                     }
                     break;
 
@@ -179,11 +187,13 @@ class Canvas {
             }
 
             if (element.prop.type == 'text' && !element.prop.textWidthAuto) {
+                // select resize text
                 if ((x >= end.x && x <= end.x + 6) && (y >= start.y && y <= end.y)) {
                     selectEle = element
                     c.resizeEle = element as FillText
                 }
             } else if (element.prop.type == 'image' && !element.prop.autoSize) {
+                // select resize image
                 if ((x >= end.x - 2 && x <= end.x + 2) && (y >= start.y - 2 && y <= end.y + 2)) {
                     selectEle = element
                     c.resizeEle = element as FillImage
@@ -342,6 +352,10 @@ class Canvas {
             }
         })
 
+    }
+
+    public setEnvs(e: EnvType) {
+        this.envs = e
     }
 
 }

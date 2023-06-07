@@ -6,9 +6,10 @@
 import { CanvasElement } from "./element"
 import { FillTextProp } from "./text"
 import { ImageProp } from "./image"
+import { Canvas } from "."
 
 // text render code
-function renderText(c: CanvasRenderingContext2D, element: CanvasElement, elementProp: FillTextProp) {
+function renderText(p: Canvas, c: CanvasRenderingContext2D, element: CanvasElement, elementProp: FillTextProp) {
 
     if (c.textBaseline) {
         c.textBaseline = "top"
@@ -18,7 +19,22 @@ function renderText(c: CanvasRenderingContext2D, element: CanvasElement, element
         c.font = `${elementProp.textSize}px ${elementProp.textFont}`
     }
 
-    let textWidth = c.measureText(elementProp.text || "Text Field").width
+    let eText: string = elementProp.text || "Text Field"
+
+    if (elementProp.isEnv) {
+        let t = p.envs[elementProp.ifEnvKey]
+        if (typeof (t) === 'string') {
+            eText = t
+        } else if (typeof (t) === 'number') {
+            eText = String(t)
+        } else if (typeof (t) === 'object') {
+            eText = "[Invalid Field]"
+        } else if (typeof (t) === 'undefined') {
+            eText = ""
+        }
+    }
+
+    let textWidth = c.measureText(eText).width
 
     if (elementProp.textWidthAuto) {
         element.setWidth(textWidth)
@@ -45,12 +61,12 @@ function renderText(c: CanvasRenderingContext2D, element: CanvasElement, element
         c.fillStyle = "black"
     }
 
-    c.fillText(elementProp.text || "Text Field", elementProp.pos.x, elementProp.pos.y, textWidth)
+    c.fillText(eText, elementProp.pos.x, elementProp.pos.y, textWidth)
 
 }
 
 // image render code
-function renderImage(c: CanvasRenderingContext2D, element: CanvasElement, elementProp: ImageProp) {
+function renderImage(p: Canvas, c: CanvasRenderingContext2D, element: CanvasElement, elementProp: ImageProp) {
 
     if (elementProp.autoSize) {
         element.setHeight(elementProp.src.height)

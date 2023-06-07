@@ -11,7 +11,9 @@ interface FillTextProp {
 
     text: string;
 
-    textIsEnv: boolean;
+    isEnv: boolean;
+    ifEnvKey: string;
+
     textFont: string;
 
     textSize: number;
@@ -37,7 +39,8 @@ class FillText extends CanvasElement {
         this.prop = {
             type: 'text',
             text: "Text",
-            textIsEnv: false,
+            isEnv: false,
+            ifEnvKey: "",
             textFont: "Verdana",
             textSize: 22,
             textWidth: 0,
@@ -80,6 +83,20 @@ class FillText extends CanvasElement {
 
     public getTextWidthAuto(): boolean {
         return this.prop.textWidthAuto || false
+    }
+
+    public setEnv(key: string) {
+        this.prop.isEnv = true
+        this.prop.ifEnvKey = key
+    }
+
+    public removeEnv() {
+        this.prop.isEnv = false
+        this.prop.ifEnvKey = ""
+    }
+
+    public isEnv(): string {
+        return this.prop.ifEnvKey
     }
 
 }

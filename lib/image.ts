@@ -11,6 +11,9 @@ interface ImageProp {
 
     src: HTMLImageElement;
 
+    isEnv: boolean;
+    ifEnvKey: string;
+
     pos: Position
     onclick?: Function;
 
@@ -32,6 +35,9 @@ class FillImage extends CanvasElement {
         this.prop = {
             type: 'image',
             src: new Image(),
+
+            isEnv: false,
+            ifEnvKey: "",
 
             pos: { x: 10, y: 10 },
 
@@ -83,6 +89,20 @@ class FillImage extends CanvasElement {
 
     public getAutoSize(): boolean {
         return this.prop.autoSize || false
+    }
+
+    public setEnv(key: string) {
+        this.prop.isEnv = true
+        this.prop.ifEnvKey = key
+    }
+
+    public removeEnv() {
+        this.prop.isEnv = false
+        this.prop.ifEnvKey = ""
+    }
+
+    public isEnv(): string {
+        return this.prop.ifEnvKey
     }
 
 }
