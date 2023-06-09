@@ -4,11 +4,12 @@
 // canvas
 
 import { CanvasElement } from "./element"
-import { NoneElement } from "./noneelement"
+import { NoneElement, NoneElementInfo } from "./noneelement"
 import { Position } from "./position"
 import { SelectProp, SelectEleWithPos } from "./select"
 import { renderText, renderImage } from "./render"
-import { FillImage, FillText } from "."
+import { FillImage, ImageProp } from "./image"
+import { FillText, FillTextProp } from "./text"
 
 type EnvType = {
     [key: string]: string | number | HTMLImageElement;
@@ -356,6 +357,27 @@ class Canvas {
 
     public setEnvs(e: EnvType) {
         this.envs = e
+    }
+
+    public getJSON(): string {
+        let eProp: any = []
+        this.elements.map((e) => {
+            eProp.push(e.prop);
+        })
+        return JSON.stringify(eProp);
+    }
+
+    public loadJSON(jd: string) {
+        let d = JSON.parse(jd)
+        d.map((e: FillTextProp | ImageProp | NoneElementInfo) => {
+            switch (e.type) {
+                case 'text':
+                    let textEle = new FillText()
+                    textEle.prop= e
+                    this.add(textEle)
+            }
+        })
+        this.render()
     }
 
 }
