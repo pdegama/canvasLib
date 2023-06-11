@@ -75,7 +75,7 @@ class FillImage extends CanvasElement {
         this.prop.onclick = cb
     }
 
-    public getLoad(b: boolean): boolean {
+    public getLoad(): boolean {
         return this.prop.isLoad || false
     }
 

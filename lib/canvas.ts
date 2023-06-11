@@ -380,6 +380,12 @@ class Canvas {
         this.render()
     }
 
+    public deselectEles() {
+        this.elements.map(e => {
+            e.deselect()
+        })
+    }
+
 }
 
 export default Canvas
