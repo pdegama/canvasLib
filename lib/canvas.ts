@@ -373,7 +373,7 @@ class Canvas {
             switch (e.type) {
                 case 'text':
                     let textEle = new FillText()
-                    textEle.prop= e
+                    textEle.prop = e
                     this.add(textEle)
             }
         })
@@ -384,6 +384,26 @@ class Canvas {
         this.elements.map(e => {
             e.deselect()
         })
+    }
+
+    public selectedEles(): [CanvasElement] {
+        let eles: any = []
+
+        this.elements.map(e => {
+            if (e.prop.selected) {
+                eles.push(e)
+            }
+        })
+
+        return eles
+    }
+
+    public onMouseDown(cb: any) {
+        this.canvas.onmousedown = () => cb(this)
+    }
+
+    public onMouseUp(cb: any) {
+        this.canvas.onmouseup = () => cb(this)
     }
 
 }
