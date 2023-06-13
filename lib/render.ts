@@ -57,6 +57,16 @@ function renderText(p: Canvas, c: CanvasRenderingContext2D, element: CanvasEleme
         c.fillRect(elementProp.pos.x, elementProp.pos.y, element.getWidth(), elementProp.textSize)
     }
 
+    if (element.getWidth() < textWidth) {
+        p.textOverFlow = true
+
+        if (c.fillStyle) {
+            c.fillStyle = "#ff000055"
+        }
+
+        c.fillRect(elementProp.pos.x, elementProp.pos.y, element.getWidth(), elementProp.textSize)
+    }
+
     if (c.fillStyle) {
         c.fillStyle = "black"
     }

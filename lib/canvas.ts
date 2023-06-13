@@ -33,6 +33,8 @@ class Canvas {
 
     public envs: EnvType // envs
 
+    public textOverFlow: boolean = false
+
     constructor(canvas: any) {
 
         this.canvas = canvas
@@ -129,7 +131,8 @@ class Canvas {
     public render() {
 
         // render all element in canvas
-
+        
+        this.textOverFlow = false
         this.context?.clearRect(0, 0, this.canvas.width, this.canvas.height) // clear canvas
 
         if (this.canvasBackground) {
@@ -404,6 +407,14 @@ class Canvas {
 
     public onMouseUp(cb: any) {
         this.canvas.onmouseup = () => cb(this)
+    }
+
+    public getImage(): string {
+        return this.canvas.toDataURL()
+    }
+
+    public isTextOverflow(): boolean {
+        return this.textOverFlow
     }
 
 }
