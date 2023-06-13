@@ -16,7 +16,7 @@ function renderText(p: Canvas, c: CanvasRenderingContext2D, element: CanvasEleme
     }
 
     if (c.font) {
-        c.font = `${elementProp.textSize}px ${elementProp.textFont}`
+        c.font = `${elementProp.textSize}px "${elementProp.textFont}"`
     }
 
     let eText: string = elementProp.text || "Text Field"
