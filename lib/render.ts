@@ -59,6 +59,7 @@ function renderText(p: Canvas, c: CanvasRenderingContext2D, element: CanvasEleme
 
     if (element.getWidth() < textWidth) {
         p.textOverFlow = true
+        p.textOverFlowEnvs.push(elementProp.isEnv ? elementProp.ifEnvKey : "_")
 
         if (c.fillStyle) {
             c.fillStyle = "#ff000055"

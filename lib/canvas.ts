@@ -34,6 +34,7 @@ class Canvas {
     public envs: EnvType // envs
 
     public textOverFlow: boolean = false
+    public textOverFlowEnvs: [string]
 
     constructor(canvas: any) {
 
@@ -54,6 +55,8 @@ class Canvas {
         this.resizeEle = undefined
 
         this.envs = {}
+
+        this.textOverFlowEnvs = ["~"]
 
         var c = this
         window.addEventListener("keyup", (e) => {
@@ -131,8 +134,9 @@ class Canvas {
     public render() {
 
         // render all element in canvas
-        
+
         this.textOverFlow = false
+        this.textOverFlowEnvs = ["~"]
         this.context?.clearRect(0, 0, this.canvas.width, this.canvas.height) // clear canvas
 
         if (this.canvasBackground) {
@@ -415,6 +419,10 @@ class Canvas {
 
     public isTextOverflow(): boolean {
         return this.textOverFlow
+    }
+
+    public getTextOverFlowEnvs(): [string] {
+        return this.textOverFlowEnvs
     }
 
 }
