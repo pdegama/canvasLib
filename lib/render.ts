@@ -79,9 +79,21 @@ function renderText(p: Canvas, c: CanvasRenderingContext2D, element: CanvasEleme
 // image render code
 function renderImage(p: Canvas, c: CanvasRenderingContext2D, element: CanvasElement, elementProp: ImageProp) {
 
+    let imgNotFound = false
+
+    let imgSrc = elementProp.src
+    if (elementProp.isEnv) {
+        let t = p.envs[elementProp.ifEnvKey]
+        if (typeof (t) !== 'string' && typeof (t) !== 'number' && typeof (t) !== 'undefined') {
+            imgSrc = t
+        } else {
+            imgNotFound = true
+        }
+    }
+
     if (elementProp.autoSize) {
-        element.setHeight(elementProp.src.height)
-        element.setWidth(elementProp.src.width)
+        element.setHeight(imgSrc.height)
+        element.setWidth(imgSrc.width)
     }
 
     if (elementProp.selected) {
@@ -91,7 +103,12 @@ function renderImage(p: Canvas, c: CanvasRenderingContext2D, element: CanvasElem
         c.fillRect(elementProp.pos.x - 2, elementProp.pos.y - 2, element.getWidth() + 4, element.getHeight() + 4)
     }
 
-    c.drawImage(elementProp.src, elementProp.pos.x, elementProp.pos.y, element.getWidth(), element.getHeight())
+    if (!imgNotFound) {
+        c.drawImage(imgSrc, elementProp.pos.x, elementProp.pos.y, element.getWidth(), element.getHeight())
+    } else {
+        c.fillStyle = "gray"
+        c.fillRect(elementProp.pos.x, elementProp.pos.y, element.getWidth(), element.getHeight())
+    }
 
     if (!elementProp.autoSize && elementProp.selected) {
         if (c.fillStyle) {

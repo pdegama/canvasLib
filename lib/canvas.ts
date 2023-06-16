@@ -382,6 +382,18 @@ class Canvas {
                     let textEle = new FillText()
                     textEle.prop = e
                     this.add(textEle)
+                    break
+                case 'image':
+                    let imgEle = new FillImage()
+                    imgEle.prop.src = new Image()
+                    imgEle.prop.isEnv = e.isEnv
+                    imgEle.prop.ifEnvKey = e.ifEnvKey
+                    imgEle.prop.pos = e.pos
+                    imgEle.prop.height = e.height
+                    imgEle.prop.width = e.width
+                    imgEle.prop.autoSize = e.autoSize
+                    imgEle.prop.selected = e.selected
+                    this.add(imgEle)
             }
         })
         this.render()
