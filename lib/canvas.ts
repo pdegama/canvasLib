@@ -70,6 +70,25 @@ class Canvas {
         this.context = this.canvas.getContext("2d")
     }
 
+    public setScale(scale: number) {
+
+        var dpr = scale;
+
+        var rect = this.canvas.getBoundingClientRect();
+
+        this.canvas.width = rect.width * dpr;
+        this.canvas.height = rect.height * dpr;
+
+        this.context?.scale(dpr, dpr);
+    }
+
+    public setScaleRatio(h: number, w: number) {
+
+        this.canvas.style.width = w + "px"
+        this.canvas.style.height = h + "px"
+
+    }
+
     public selectable(selectable: boolean, selectProp: any) {
         this.eleSlect = selectable
         this.selectProp = { ...this.selectProp, ...selectProp }
