@@ -66,8 +66,23 @@ function renderText(p: Canvas, c: CanvasRenderingContext2D, element: CanvasEleme
         c.strokeText(eText, elementProp.pos.x, elementProp.pos.y, textWidth)
     }
 
+    c.textAlign = elementProp.align
+
+    let x = 0
+    switch (elementProp.align) {
+        case "left":
+            x = elementProp.pos.x;
+            break
+        case "right":
+            x = elementProp.pos.x + element.getWidth();
+            break
+        case "center":
+            x = elementProp.pos.x + (element.getWidth() / 2);
+            break
+    }
+
     c.fillStyle = elementProp.color
-    c.fillText(eText, elementProp.pos.x, elementProp.pos.y, textWidth)
+    c.fillText(eText, x, elementProp.pos.y, textWidth)
 
 }
 

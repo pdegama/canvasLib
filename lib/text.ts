@@ -24,6 +24,8 @@ interface FillTextProp {
     strokeColor: string;
     strokeWidth: number;
 
+    align: "left" | "right" | "center";
+
     textWidthAuto?: boolean;
 
     pos: Position
@@ -51,6 +53,7 @@ class FillText extends CanvasElement {
             textFont: "Verdana",
             textSize: 22,
             color: "#000000",
+            align: "left",
             textWidth: 0,
             textWidthAuto: true,
             strokeColor: "#000000",
@@ -91,6 +94,14 @@ class FillText extends CanvasElement {
 
     public getColor(): string {
         return this.prop.color
+    }
+
+    public setAlign(align: "left" | "right" | "center") {
+        this.prop.align = align
+    }
+
+    public getAlign(): "left" | "right" | "center" {
+        return this.prop.align
     }
 
     public setStrokeColor(color: string) {
