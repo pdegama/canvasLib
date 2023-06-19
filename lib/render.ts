@@ -60,12 +60,6 @@ function renderText(p: Canvas, c: CanvasRenderingContext2D, element: CanvasEleme
         c.fillRect(elementProp.pos.x, elementProp.pos.y, element.getWidth(), elementProp.textSize)
     }
 
-    if (elementProp.strokeWidth > 0) {
-        c.strokeStyle = elementProp.strokeColor
-        c.lineWidth = elementProp.strokeWidth;
-        c.strokeText(eText, elementProp.pos.x, elementProp.pos.y, textWidth)
-    }
-
     c.textAlign = elementProp.align
 
     let x = 0
@@ -79,6 +73,12 @@ function renderText(p: Canvas, c: CanvasRenderingContext2D, element: CanvasEleme
         case "center":
             x = elementProp.pos.x + (element.getWidth() / 2);
             break
+    }
+
+    if (elementProp.strokeWidth > 0) {
+        c.strokeStyle = elementProp.strokeColor
+        c.lineWidth = elementProp.strokeWidth;
+        c.strokeText(eText, x, elementProp.pos.y, textWidth)
     }
 
     c.fillStyle = elementProp.color
