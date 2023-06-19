@@ -130,7 +130,7 @@ function renderImage(p: Canvas, c: CanvasRenderingContext2D, element: CanvasElem
     c.quadraticCurveTo(x + width, y + height, x + width - radius, y + height)
     c.lineTo(x + radius, y + height)
     c.quadraticCurveTo(x, y + height, x, y + height - radius)
-    c.lineTo(x, y + radius)
+    c.lineTo(x, y + radius + (radius === 0 ? (-elementProp.border) : 0))
     c.quadraticCurveTo(x, y, x + radius, y)
 
     if (elementProp.border !== 0) {
