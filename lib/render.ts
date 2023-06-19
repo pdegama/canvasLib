@@ -43,17 +43,12 @@ function renderText(p: Canvas, c: CanvasRenderingContext2D, element: CanvasEleme
     if (elementProp.selected) {
 
         if (!elementProp.textWidthAuto) {
-            if (c.fillStyle) {
-                c.fillStyle = "#000fb3cc"
-            }
-
+            c.fillStyle = "#000fb3cc"
             c.fillRect(elementProp.pos.x + element.getWidth(), elementProp.pos.y, 6, elementProp.textSize)
         }
 
-        if (c.fillStyle) {
-            c.fillStyle = "#4d90e855"
-        }
 
+        c.fillStyle = "#4d90e855"
         c.fillRect(elementProp.pos.x, elementProp.pos.y, element.getWidth(), elementProp.textSize)
     }
 
@@ -61,17 +56,17 @@ function renderText(p: Canvas, c: CanvasRenderingContext2D, element: CanvasEleme
         p.textOverFlow = true
         p.textOverFlowEnvs.push(elementProp.isEnv ? elementProp.ifEnvKey : "_")
 
-        if (c.fillStyle) {
-            c.fillStyle = "#ff000055"
-        }
-
+        c.fillStyle = "#ff000055"
         c.fillRect(elementProp.pos.x, elementProp.pos.y, element.getWidth(), elementProp.textSize)
     }
 
-    if (c.fillStyle) {
-        c.fillStyle = "black"
+    if (elementProp.strokeWidth > 0) {
+        c.strokeStyle = elementProp.strokeColor
+        c.lineWidth = elementProp.strokeWidth;
+        c.strokeText(eText, elementProp.pos.x, elementProp.pos.y, textWidth)
     }
 
+    c.fillStyle = elementProp.color
     c.fillText(eText, elementProp.pos.x, elementProp.pos.y, textWidth)
 
 }
@@ -97,24 +92,50 @@ function renderImage(p: Canvas, c: CanvasRenderingContext2D, element: CanvasElem
     }
 
     if (elementProp.selected) {
-        if (c.fillStyle) {
-            c.fillStyle = "#4d90e855"
-        }
+        c.fillStyle = "#4d90e855"
         c.fillRect(elementProp.pos.x - 2, elementProp.pos.y - 2, element.getWidth() + 4, element.getHeight() + 4)
     }
+
+    let x = elementProp.pos.x
+    let y = elementProp.pos.y
+    let radius = elementProp.borderRadius
+    let width = element.getWidth()
+    let height = element.getHeight()
+
+    c.save()
+
+    c.strokeStyle = elementProp.borderColor
+    c.lineWidth = elementProp.border * 2
+
+    c.beginPath()
+    c.moveTo(x + radius, y)
+    c.lineTo(x + width - radius, y)
+    c.quadraticCurveTo(x + width, y, x + width, y + radius)
+    c.lineTo(x + width, y + height - radius)
+    c.quadraticCurveTo(x + width, y + height, x + width - radius, y + height)
+    c.lineTo(x + radius, y + height)
+    c.quadraticCurveTo(x, y + height, x, y + height - radius)
+    c.lineTo(x, y + radius)
+    c.quadraticCurveTo(x, y, x + radius, y)
+
+    if (elementProp.border !== 0) {
+        c.stroke();
+    }
+
+    c.closePath()
+    c.clip()
 
     if (!imgNotFound) {
         c.drawImage(imgSrc, elementProp.pos.x, elementProp.pos.y, element.getWidth(), element.getHeight())
     } else {
         c.fillStyle = "gray"
-        c.fillRect(elementProp.pos.x, elementProp.pos.y, element.getWidth(), element.getHeight())
+        c.fill()
     }
 
-    if (!elementProp.autoSize && elementProp.selected) {
-        if (c.fillStyle) {
-            c.fillStyle = "#000fb3cc"
-        }
+    c.restore()
 
+    if (!elementProp.autoSize && elementProp.selected) {
+        c.fillStyle = "#000fb3cc"
         c.fillRect(elementProp.pos.x + element.getWidth() - 3, elementProp.pos.y + element.getHeight() - 3, 6, 6)
     }
 

@@ -20,6 +20,10 @@ interface ImageProp {
     height: number;
     width: number;
 
+    border: number;
+    borderColor: string;
+    borderRadius: number;
+
     autoSize?: boolean;
 
     selected?: boolean;
@@ -43,6 +47,10 @@ class FillImage extends CanvasElement {
 
             height: 0,
             width: 0,
+
+            border: 0,
+            borderColor: "#000000",
+            borderRadius: 0,
 
             autoSize: true,
 
@@ -69,6 +77,30 @@ class FillImage extends CanvasElement {
 
     public getHeight(): number {
         return this.prop.height
+    }
+
+    public setBorder(width: number) {
+        this.prop.border = width
+    }
+
+    public getBorder(): number {
+        return this.prop.border
+    }
+
+    public setBorderColor(color: string) {
+        this.prop.borderColor = color
+    }
+
+    public getBorderColor(): string {
+        return this.prop.borderColor
+    }
+
+    public setBorderRadius(Radius: number) {
+        this.prop.borderRadius = Radius
+    }
+
+    public getBorderRadius(): number {
+        return this.prop.borderRadius
     }
 
     public onclick(cb: Function) {

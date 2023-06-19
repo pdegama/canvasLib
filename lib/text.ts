@@ -19,6 +19,11 @@ interface FillTextProp {
     textSize: number;
     textWidth: number;
 
+    color: string;
+
+    strokeColor: string;
+    strokeWidth: number;
+
     textWidthAuto?: boolean;
 
     pos: Position
@@ -43,8 +48,11 @@ class FillText extends CanvasElement {
             ifEnvKey: "",
             textFont: "Verdana",
             textSize: 22,
+            color: "#000000",
             textWidth: 0,
             textWidthAuto: true,
+            strokeColor: "#000000",
+            strokeWidth: 0,
             pos: { x: 10, y: 10 },
 
             height: 22,
@@ -71,6 +79,30 @@ class FillText extends CanvasElement {
 
     public setFont(font: string) {
         this.prop.textFont = font
+    }
+
+    public setColor(color: string) {
+        this.prop.color = color
+    }
+
+    public getColor(): string {
+        return this.prop.color
+    }
+
+    public setStrokeColor(color: string) {
+        this.prop.strokeColor = color
+    }
+
+    public getStrokeColor(): string {
+        return this.prop.strokeColor
+    }
+
+    public setStrokeWidth(width: number) {
+        this.prop.strokeWidth = width
+    }
+
+    public getStrokeWidth(): number {
+        return this.prop.strokeWidth
     }
 
     public onclick(cb: Function) {

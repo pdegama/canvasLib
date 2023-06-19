@@ -412,6 +412,9 @@ class Canvas {
                     imgEle.prop.width = e.width
                     imgEle.prop.autoSize = e.autoSize
                     imgEle.prop.selected = e.selected
+                    imgEle.prop.border= e.border;
+                    imgEle.prop.borderColor= e.borderColor;
+                    imgEle.prop.borderRadius= e.borderRadius;
                     this.add(imgEle)
             }
         })
