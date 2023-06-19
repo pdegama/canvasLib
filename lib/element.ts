@@ -48,6 +48,10 @@ abstract class CanvasElement {
         return this.prop
     }
 
+    public delete() {
+        this.prop.deleted = true
+    }
+
 }
 
 export { CanvasElement }

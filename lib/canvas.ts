@@ -19,12 +19,12 @@ class Canvas {
 
     private canvas: HTMLCanvasElement // canvas
     private context: CanvasRenderingContext2D | null // canvas 2d context
-    private elements: [CanvasElement] = [new NoneElement()] // all canvas elements
+    private elements: CanvasElement[] = [new NoneElement()] // all canvas elements
     private selectProp: SelectProp // canvas elements selection prop
 
     private eleSlect: boolean = false // canvas elements is selectable
     private mouseDownPos: Position // if mouse down in canvas then set mouse position in canvas
-    private mouseMoveEle: [SelectEleWithPos] // mouse move then the elements move with mouse
+    private mouseMoveEle: SelectEleWithPos[] = [] // mouse move then the elements move with mouse
     private notDeselectLock: boolean // not deselect element
 
     private resizeEle: CanvasElement | undefined // current resize text selection
@@ -412,9 +412,9 @@ class Canvas {
                     imgEle.prop.width = e.width
                     imgEle.prop.autoSize = e.autoSize
                     imgEle.prop.selected = e.selected
-                    imgEle.prop.border= e.border;
-                    imgEle.prop.borderColor= e.borderColor;
-                    imgEle.prop.borderRadius= e.borderRadius;
+                    imgEle.prop.border = e.border;
+                    imgEle.prop.borderColor = e.borderColor;
+                    imgEle.prop.borderRadius = e.borderRadius;
                     this.add(imgEle)
             }
         })
@@ -457,6 +457,16 @@ class Canvas {
 
     public getTextOverFlowEnvs(): [string] {
         return this.textOverFlowEnvs
+    }
+
+    public clearDeleteElement() {
+        let ele: CanvasElement[] = []
+        this.elements.map((e) => {
+            if (!e.prop.deleted) {
+                ele.push(e)
+            }
+        })
+        this.elements = ele
     }
 
 }

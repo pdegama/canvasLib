@@ -28,6 +28,8 @@ interface ImageProp {
 
     selected?: boolean;
     isLoad?: boolean;
+
+    deleted: boolean;
 }
 
 class FillImage extends CanvasElement {
@@ -54,7 +56,9 @@ class FillImage extends CanvasElement {
 
             autoSize: true,
 
-            isLoad: false
+            isLoad: false,
+
+            deleted: false,
         }
     }
 

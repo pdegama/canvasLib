@@ -33,6 +33,8 @@ interface FillTextProp {
     width: number;
 
     selected?: boolean;
+
+    deleted: boolean;
 }
 
 class FillText extends CanvasElement {
@@ -56,7 +58,9 @@ class FillText extends CanvasElement {
             pos: { x: 10, y: 10 },
 
             height: 22,
-            width: 0
+            width: 0,
+
+            deleted: false,
         }
     }
 

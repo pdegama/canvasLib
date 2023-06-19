@@ -16,6 +16,8 @@ interface NoneElementInfo {
     width: number;
 
     selected?: boolean;
+
+    deleted: boolean;
 }
 
 class NoneElement extends CanvasElement {
@@ -28,7 +30,8 @@ class NoneElement extends CanvasElement {
             type: 'none',
             pos: { x: 0, y: 0 },
             height: 0,
-            width: 0
+            width: 0,
+            deleted: false,
         }
     }
 
