@@ -398,11 +398,13 @@ class Canvas {
         d.map((e: FillTextProp | ImageProp | NoneElementInfo) => {
             switch (e.type) {
                 case 'text':
+                    // assign text prop to new fill text object
                     let textEle = new FillText()
                     textEle.prop = e
                     this.add(textEle)
                     break
                 case 'image':
+                    // assign images props to new new image object
                     let imgEle = new FillImage()
                     imgEle.prop.src = new Image()
                     imgEle.prop.isEnv = e.isEnv
@@ -422,7 +424,9 @@ class Canvas {
     }
 
     public deselectEles() {
+        // loop of element
         this.elements.map(e => {
+            // deselect element
             e.deselect()
         })
     }
@@ -430,7 +434,9 @@ class Canvas {
     public selectedEles(): [CanvasElement] {
         let eles: any = []
 
+        // loop of elements
         this.elements.map(e => {
+            // if element is selected then add to eles stak
             if (e.prop.selected) {
                 eles.push(e)
             }
@@ -440,33 +446,40 @@ class Canvas {
     }
 
     public onMouseDown(cb: any) {
+        // mouse down event
         this.canvas.onmousedown = () => cb(this)
     }
 
     public onMouseUp(cb: any) {
+        // mouse up event
         this.canvas.onmouseup = () => cb(this)
     }
 
     public getImage(): string {
+        // get image
         return this.canvas.toDataURL()
     }
 
     public isTextOverflow(): boolean {
+        // if text is over flow this text field?
         return this.textOverFlow
     }
 
     public getTextOverFlowEnvs(): [string] {
+        // overflow text enevs
         return this.textOverFlowEnvs
     }
 
     public clearDeleteElement() {
         let ele: CanvasElement[] = []
+        // loop of elements
         this.elements.map((e) => {
+            // if element is not deleted then add to ele stack 
             if (!e.prop.deleted) {
                 ele.push(e)
             }
         })
-        this.elements = ele
+        this.elements = ele // assign ele stack to elements
     }
 
 }
