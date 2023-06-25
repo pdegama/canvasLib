@@ -1,5 +1,5 @@
 {
-  "name": "canvaslib",
+  "name": "@theparthka/canvaslib",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/canvasLib.umd.cjs",
