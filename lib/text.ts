@@ -15,6 +15,8 @@ interface FillTextProp {
     ifEnvKey: string;
 
     textFont: string;
+    textBold: boolean;
+    textItalic: boolean;
 
     textSize: number;
     textWidth: number;
@@ -51,6 +53,8 @@ class FillText extends CanvasElement {
             isEnv: false,
             ifEnvKey: "",
             textFont: "Verdana",
+            textBold: false,
+            textItalic: false,
             textSize: 22,
             color: "#000000",
             align: "left",
@@ -86,6 +90,14 @@ class FillText extends CanvasElement {
 
     public setFont(font: string) {
         this.prop.textFont = font
+    }
+
+    public setBold(b: boolean) {
+        this.prop.textBold = b
+    }
+
+    public setItalic(b: boolean) {
+        this.prop.textItalic = b
     }
 
     public setColor(color: string) {
