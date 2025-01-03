@@ -28,7 +28,8 @@ function renderText(p: Canvas, c: CanvasRenderingContext2D, element: CanvasEleme
         } else if (typeof (t) === 'number') {
             eText = String(t)
         } else if (typeof (t) === 'object') {
-            eText = "[Invalid Field]"
+            // @ts-ignore
+            eText = t instanceof Image ? (t.img_name ? t.img_name : "[Invalid Field]") : "[Invalid Field]"
         } else if (typeof (t) === 'undefined') {
             eText = ""
         }
