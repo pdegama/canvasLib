@@ -57,6 +57,9 @@ function renderText(p: Canvas, c: CanvasRenderingContext2D, element: CanvasEleme
 
         c.fillStyle = "#4d90e855"
         c.fillRect(elementProp.pos.x, elementProp.pos.y, element.getWidth(), elementProp.textSize)
+    } else if (p.showFieldBg) {
+        c.fillStyle = "#ede900cc"
+        c.fillRect(elementProp.pos.x, elementProp.pos.y, element.getWidth(), elementProp.textSize)
     }
 
     if (element.getWidth() < textWidth) {

@@ -36,6 +36,8 @@ class Canvas {
     public textOverFlow: boolean = false
     public textOverFlowEnvs: [string]
 
+    public showFieldBg = false 
+
     constructor(canvas: any) {
 
         this.canvas = canvas
@@ -148,6 +150,15 @@ class Canvas {
 
     public setBackground(bg: HTMLImageElement) {
         this.canvasBackground = bg
+    }
+
+    public setFieldBg(b: boolean) {
+        this.showFieldBg = b
+        this.render()
+    }
+
+    public getFieldBg() {
+        return this.showFieldBg
     }
 
     public render() {

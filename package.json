@@ -25,5 +25,8 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  }
 }
