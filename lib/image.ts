@@ -84,7 +84,8 @@ class FillImage extends CanvasElement {
     }
 
     public setBorder(width: number) {
-        this.prop.border = width
+        let b = Number(width)
+        this.prop.border = b
     }
 
     public getBorder(): number {
