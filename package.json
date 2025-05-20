@@ -28,6 +28,7 @@
     "dist"
   ],
   "dependencies": {
+    "jsbarcode": "^3.11.6",
     "qrcode": "^1.5.4"
   }
 }

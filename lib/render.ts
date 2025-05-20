@@ -9,6 +9,7 @@ import { ImageProp } from "./image"
 import { Canvas } from "."
 import { BarcodeQrProp } from "./barcodeqr"
 import QRCode from 'qrcode';
+import JsBarcode from 'jsbarcode';
 
 
 // text render code
@@ -170,11 +171,26 @@ function renderImage(p: Canvas, c: CanvasRenderingContext2D, element: CanvasElem
 }
 
 // barcodeqr render code
-function renderBarCodeQR(_: Canvas, c: CanvasRenderingContext2D, element: CanvasElement, elementProp: BarcodeQrProp) {
+function renderBarCodeQR(p: Canvas, c: CanvasRenderingContext2D, element: CanvasElement, elementProp: BarcodeQrProp) {
 
     let data = String(elementProp.data) || ""
+    if (elementProp.isEnv) {
+        let t = p.envs[elementProp.ifEnvKey]
+        if (typeof (t) === 'string') {
+            data = t
+        } else if (typeof (t) === 'number') {
+            data = String(t)
+        } else if (typeof (t) === 'object') {
+            // @ts-ignore
+            eText = t instanceof Image ? (t.img_name ? t.img_name : "[Invalid Field]") : "[Invalid Field]"
+        } else if (typeof (t) === 'undefined') {
+            data = ""
+        }
+    }
 
-    generateQR(data, (imgSrc, imgNotFound) => {
+    // console.log("qr", data);
+
+    generateBarcodeQR(elementProp.type, data, (imgSrc, imgNotFound) => {
 
         if (elementProp.autoSize) {
             element.setHeight(imgSrc.height)
@@ -231,30 +247,73 @@ function renderBarCodeQR(_: Canvas, c: CanvasRenderingContext2D, element: Canvas
     })
 }
 
-const generateQR = async (value: string, onLoad: (img: HTMLImageElement, imgNotFound: boolean) => void, onError?: (err: any) => void) => {
-    if (!value || value =="") return onLoad(new Image(), true)
-    
-    try {
-        const url = await QRCode.toDataURL(value);
-        const img = new Image();
-        img.src = url;
-        img.alt = 'QR Code';
+const generateBarcodeQR = async (type: "barcode" | "qr", value: string, onLoad: (img: HTMLImageElement, imgNotFound: boolean) => void, onError?: (err: any) => void) => {
+    if (!value || value === '') return onLoad(new Image(), true);
 
-        img.onload = () => {
-            // console.log('QR code image loaded');
-            onLoad(img, false); // your callback with the loaded image
-        };
+    if (type === 'barcode') {
+        try {
+            // Create SVG element to render barcode
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 
-        img.onerror = (err) => {
-            console.error('Failed to load QR code image', err);
+            // Generate barcode into SVG
+            JsBarcode(svg, value, {
+                format: 'CODE128',
+                lineColor: '#000',
+                width: 2,
+                height: 80,
+                displayValue: true,
+                margin: 0,
+            });
+
+            // Convert SVG to base64
+            const serializer = new XMLSerializer();
+            const svgString = serializer.serializeToString(svg);
+            const base64 = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgString)));
+
+            // Create image
+            const img = new Image();
+            img.src = base64;
+            img.alt = 'Barcode';
+            img.width = 300;
+
+            img.onload = () => {
+                onLoad(img, false);
+            };
+
+            img.onerror = (err) => {
+                console.error('Failed to load barcode image', err);
+                if (onError) onError(err);
+            };
+        } catch (err) {
+            console.error('Barcode generation failed', err);
             if (onError) onError(err);
-        };
+        }
 
-        // Optionally set size
-        img.width = 200;
-    } catch (err) {
-        console.error('Failed to generate QR code', err);
-        if (onError) onError(err);
+    } else {
+        try {
+            const url = await QRCode.toDataURL(value, {
+                margin: 1,
+            });
+            const img = new Image();
+            img.src = url;
+            img.alt = 'QR Code';
+
+            img.onload = () => {
+                // console.log('QR code image loaded');
+                onLoad(img, false); // your callback with the loaded image
+            };
+
+            img.onerror = (err) => {
+                console.error('Failed to load QR code image', err);
+                if (onError) onError(err);
+            };
+
+            // Optionally set size
+            img.width = 200;
+        } catch (err) {
+            console.error('Failed to generate QR code', err);
+            if (onError) onError(err);
+        }
     }
 };
 
