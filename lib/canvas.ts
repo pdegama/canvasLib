@@ -7,9 +7,10 @@ import { CanvasElement } from "./element"
 import { NoneElement, NoneElementInfo } from "./noneelement"
 import { Position } from "./position"
 import { SelectProp, SelectEleWithPos } from "./select"
-import { renderText, renderImage } from "./render"
+import { renderText, renderImage, renderBarCodeQR } from "./render"
 import { FillImage, ImageProp } from "./image"
 import { FillText, FillTextProp } from "./text"
+import { BarcodeQrProp, FillBarCodeQR } from "./barcodeqr"
 
 type EnvType = {
     [key: string]: string | number | HTMLImageElement;
@@ -190,7 +191,18 @@ class Canvas {
                         renderImage(this, this.context, element, elementProp)
                     }
                     break;
-
+                case 'barcode':
+                    // if barcode
+                    if (this.context) {
+                        renderBarCodeQR(this, this.context, element, elementProp)
+                    }
+                    break;
+                case 'qr':
+                    // if qr code
+                    if (this.context) {
+                        renderBarCodeQR(this, this.context, element, elementProp)
+                    }
+                    break;
                 case 'none':
                     // if element is none
 
@@ -230,7 +242,8 @@ class Canvas {
                     selectEle = element
                     c.resizeEle = element as FillText
                 }
-            } else if (element.prop.type == 'image' && !element.prop.autoSize) {
+            } else if (['image', 'qr', 'barcode'].includes((element.prop as ImageProp | BarcodeQrProp).type)) {
+                if ((element.prop as ImageProp | BarcodeQrProp).autoSize) return 
                 // select resize image
                 if ((x >= end.x - 2 && x <= end.x + 2) && (y >= start.y - 2 && y <= end.y + 2)) {
                     selectEle = element
@@ -321,7 +334,7 @@ class Canvas {
                 return
             }
 
-            if (c.resizeEle.prop.type === 'image') {
+            if (['image', 'qr', 'barcode'].includes(c.resizeEle.prop.type)) {
                 c.canvas.style.cursor = 'se-resize' // change curser
 
                 let pos = c.resizeEle.getPos()
@@ -406,7 +419,7 @@ class Canvas {
 
     public loadJSON(jd: string) {
         let d = JSON.parse(jd)
-        d.map((e: FillTextProp | ImageProp | NoneElementInfo) => {
+        d.map((e: FillTextProp | ImageProp | BarcodeQrProp | NoneElementInfo) => {
             switch (e.type) {
                 case 'text':
                     // assign text prop to new fill text object
@@ -429,6 +442,19 @@ class Canvas {
                     imgEle.prop.borderColor = e.borderColor;
                     imgEle.prop.borderRadius = e.borderRadius;
                     this.add(imgEle)
+                    break
+                case 'barcode':
+                    // assign barcode props to new new barcode object
+                    let barCodeEle = new FillBarCodeQR()
+                    barCodeEle.prop = e
+                    this.add(barCodeEle)
+                    break
+                case 'qr':
+                    // assign qr props to new new qr object
+                    let qrEle = new FillBarCodeQR()
+                    qrEle.prop = e
+                    this.add(qrEle)
+                    break
             }
         })
         this.render()

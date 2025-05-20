@@ -7,6 +7,9 @@ import { CanvasElement } from "./element"
 import { FillTextProp } from "./text"
 import { ImageProp } from "./image"
 import { Canvas } from "."
+import { BarcodeQrProp } from "./barcodeqr"
+import QRCode from 'qrcode';
+
 
 // text render code
 function renderText(p: Canvas, c: CanvasRenderingContext2D, element: CanvasElement, elementProp: FillTextProp) {
@@ -166,4 +169,93 @@ function renderImage(p: Canvas, c: CanvasRenderingContext2D, element: CanvasElem
 
 }
 
-export { renderText, renderImage }
+// barcodeqr render code
+function renderBarCodeQR(_: Canvas, c: CanvasRenderingContext2D, element: CanvasElement, elementProp: BarcodeQrProp) {
+
+    let data = String(elementProp.data) || ""
+
+    generateQR(data, (imgSrc, imgNotFound) => {
+
+        if (elementProp.autoSize) {
+            element.setHeight(imgSrc.height)
+            element.setWidth(imgSrc.width)
+        }
+
+        if (elementProp.selected) {
+            c.fillStyle = "#4d90e855"
+            c.fillRect(elementProp.pos.x - 2, elementProp.pos.y - 2, element.getWidth() + 4, element.getHeight() + 4)
+        }
+
+        let x = elementProp.pos.x
+        let y = elementProp.pos.y
+        let radius = 0
+        let width = element.getWidth()
+        let height = element.getHeight()
+
+        c.save()
+
+        c.strokeStyle = "#000000"
+        c.lineWidth = 0 * 2
+
+        c.beginPath()
+        c.moveTo(x + radius, y)
+        c.lineTo(x + width - radius, y)
+        c.quadraticCurveTo(x + width, y, x + width, y + radius)
+        c.lineTo(x + width, y + height - radius)
+        c.quadraticCurveTo(x + width, y + height, x + width - radius, y + height)
+        c.lineTo(x + radius, y + height)
+        c.quadraticCurveTo(x, y + height, x, y + height - radius)
+        c.lineTo(x, y + radius + (radius === 0 ? (-0) : 0))
+        c.quadraticCurveTo(x, y, x + radius, y)
+
+        if (0 !== 0) {
+            c.stroke();
+        }
+
+        c.closePath()
+        c.clip()
+
+        if (!imgNotFound) {
+            c.drawImage(imgSrc, elementProp.pos.x, elementProp.pos.y, element.getWidth(), element.getHeight())
+        } else {
+            c.fillStyle = "gray"
+            c.fill()
+        }
+
+        c.restore()
+
+        if (!elementProp.autoSize && elementProp.selected) {
+            c.fillStyle = "#000fb3cc"
+            c.fillRect(elementProp.pos.x + element.getWidth() - 3, elementProp.pos.y + element.getHeight() - 3, 6, 6)
+        }
+    })
+}
+
+const generateQR = async (value: string, onLoad: (img: HTMLImageElement, imgNotFound: boolean) => void, onError?: (err: any) => void) => {
+    if (!value || value =="") return onLoad(new Image(), true)
+    
+    try {
+        const url = await QRCode.toDataURL(value);
+        const img = new Image();
+        img.src = url;
+        img.alt = 'QR Code';
+
+        img.onload = () => {
+            // console.log('QR code image loaded');
+            onLoad(img, false); // your callback with the loaded image
+        };
+
+        img.onerror = (err) => {
+            console.error('Failed to load QR code image', err);
+            if (onError) onError(err);
+        };
+
+        // Optionally set size
+        img.width = 200;
+    } catch (err) {
+        console.error('Failed to generate QR code', err);
+        if (onError) onError(err);
+    }
+};
+
+export { renderText, renderImage, renderBarCodeQR }

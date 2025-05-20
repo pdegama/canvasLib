@@ -7,10 +7,11 @@ import { Position } from "./position";
 import { FillTextProp } from "./text";
 import { ImageProp } from "./image"
 import { NoneElementInfo } from "./noneelement";
+import { BarcodeQrProp } from "./barcodeqr";
 
 abstract class CanvasElement {
 
-    abstract prop: FillTextProp | ImageProp | NoneElementInfo
+    abstract prop: FillTextProp | ImageProp | BarcodeQrProp | NoneElementInfo
 
     public setWidth(w: number) {
         this.prop.width = w
@@ -44,7 +45,7 @@ abstract class CanvasElement {
         this.prop.selected = false
     }
 
-    public getProp(): FillTextProp | ImageProp | NoneElementInfo {
+    public getProp(): FillTextProp | ImageProp | BarcodeQrProp | NoneElementInfo {
         return this.prop
     }
 

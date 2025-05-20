@@ -6,3 +6,4 @@
 export { default as Canvas } from './canvas';
 export * from './text';
 export * from './image';
+export * from './barcodeqr';    
