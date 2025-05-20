@@ -39,6 +39,8 @@ interface FillTextProp {
     selected?: boolean;
 
     deleted: boolean;
+
+    style?: "uppercase" | "lowercase" | "none";
 }
 
 class FillText extends CanvasElement {
@@ -68,6 +70,7 @@ class FillText extends CanvasElement {
             width: 0,
 
             deleted: false,
+            style: "none",
         }
     }
 
@@ -158,6 +161,13 @@ class FillText extends CanvasElement {
         return this.prop.ifEnvKey
     }
 
+    public setStyle(style: "uppercase" | "lowercase" | "none") {
+        this.prop.style = style
+    }
+
+    public getStyle(): "uppercase" | "lowercase" | "none" {
+        return this.prop.style || "none"
+    }
 }
 
 

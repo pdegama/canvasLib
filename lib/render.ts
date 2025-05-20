@@ -35,6 +35,12 @@ function renderText(p: Canvas, c: CanvasRenderingContext2D, element: CanvasEleme
         }
     }
 
+    if (elementProp.style === "uppercase") {
+        eText = eText.toUpperCase()
+    } else if (elementProp.style === "lowercase") {
+        eText = eText.toLowerCase()
+    }
+
     let textWidth = c.measureText(eText).width
 
     if (elementProp.textWidthAuto) {
