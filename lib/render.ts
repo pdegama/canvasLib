@@ -171,7 +171,7 @@ function renderImage(p: Canvas, c: CanvasRenderingContext2D, element: CanvasElem
 }
 
 // barcodeqr render code
-function renderBarCodeQR(p: Canvas, c: CanvasRenderingContext2D, element: CanvasElement, elementProp: BarcodeQrProp) {
+async function renderBarCodeQR(p: Canvas, c: CanvasRenderingContext2D, element: CanvasElement, elementProp: BarcodeQrProp) {
 
     let data = String(elementProp.data) || ""
     if (elementProp.isEnv) {
@@ -190,7 +190,7 @@ function renderBarCodeQR(p: Canvas, c: CanvasRenderingContext2D, element: Canvas
 
     // console.log("qr", data);
 
-    generateBarcodeQR(elementProp.type, data, (imgSrc, imgNotFound) => {
+    await generateBarcodeQR(elementProp.type, data, (imgSrc, imgNotFound) => {
 
         if (elementProp.autoSize) {
             element.setHeight(imgSrc.height)

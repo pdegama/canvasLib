@@ -162,7 +162,7 @@ class Canvas {
         return this.showFieldBg
     }
 
-    public render() {
+    public async render() {
 
         // render all element in canvas
 
@@ -174,7 +174,7 @@ class Canvas {
             this.context?.drawImage(this.canvasBackground, 0, 0)
         }
 
-        this.elements.map((element) => { // loop of elements
+        for (const element of this.elements) { // loop of elements
 
             let elementProp = element.getProp() // get element info
             switch (elementProp.type) {
@@ -194,13 +194,13 @@ class Canvas {
                 case 'barcode':
                     // if barcode
                     if (this.context) {
-                        renderBarCodeQR(this, this.context, element, elementProp)
+                        await renderBarCodeQR(this, this.context, element, elementProp)
                     }
                     break;
                 case 'qr':
                     // if qr code
                     if (this.context) {
-                        renderBarCodeQR(this, this.context, element, elementProp)
+                        await renderBarCodeQR(this, this.context, element, elementProp)
                     }
                     break;
                 case 'none':
@@ -208,7 +208,7 @@ class Canvas {
 
                     break;
             }
-        })
+        }
     }
 
     private elementSelectEvent(e: any, c: Canvas) {
