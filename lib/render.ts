@@ -266,6 +266,7 @@ const generateBarcodeQR = async (
                     height: 80,
                     displayValue: true,
                     margin: 0,
+                    fontOptions: 'bold',
                 });
 
                 const serializer = new XMLSerializer();
