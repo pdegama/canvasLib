@@ -34,6 +34,7 @@ class Canvas {
 
     public envs: EnvType // envs
 
+    public showOverFlowBg: boolean = false 
     public textOverFlow: boolean = false
     public textOverFlowEnvs: [string]
 
@@ -160,6 +161,13 @@ class Canvas {
 
     public getFieldBg() {
         return this.showFieldBg
+    }
+
+    public setOverflowBg(b: boolean) {
+        this.showOverFlowBg = b
+    }
+    public getOverflowBg() {
+        return this.showOverFlowBg
     }
 
     public async render() {

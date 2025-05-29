@@ -70,8 +70,10 @@ function renderText(p: Canvas, c: CanvasRenderingContext2D, element: CanvasEleme
         p.textOverFlow = true
         p.textOverFlowEnvs.push(elementProp.isEnv ? elementProp.ifEnvKey : "_")
 
-        c.fillStyle = "#ff000055"
-        c.fillRect(elementProp.pos.x, elementProp.pos.y, element.getWidth(), elementProp.textSize)
+        if (p.showOverFlowBg) {   
+            c.fillStyle = "#ff000055"
+            c.fillRect(elementProp.pos.x, elementProp.pos.y, element.getWidth(), elementProp.textSize)
+        }
     }
 
     c.textAlign = elementProp.align
